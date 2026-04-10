@@ -168,6 +168,7 @@
   background: var(--bg);
   scrollbar-width: thin;
   scrollbar-color: var(--accent) transparent;
+  animation: panel-slide-in 0.6s var(--ease-smooth) both;
 }
 
 /* Scrollbar styling for the form panel — prevent thumb from touching window edges */

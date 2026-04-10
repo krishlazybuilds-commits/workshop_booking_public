@@ -169,5 +169,21 @@
 
 </div>
 
+<!-- Panel transition -->
+<script>
+(function() {
+    var panel = document.querySelector('.signin-form-panel');
+    var navBtn = panel && panel.querySelector('a.btn-outline');
+    if (!navBtn) return;
+
+    navBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var href = this.href;
+        panel.classList.add('panel-slide-out');
+        setTimeout(function() { window.location.href = href; }, 400);
+    });
+})();
+</script>
+
 </body>
 </html>

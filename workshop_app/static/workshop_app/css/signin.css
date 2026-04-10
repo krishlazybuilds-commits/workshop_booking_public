@@ -7,7 +7,7 @@
 .signin-page {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1.4fr;
   background: var(--bg);
 }
 
@@ -192,6 +192,7 @@
   justify-content: center;
   padding: var(--space-12);
   position: relative;
+  animation: panel-slide-in 0.6s var(--ease-smooth) both;
 }
 
 .signin-form-wrap {
@@ -405,7 +406,7 @@
 
 @media (max-width: 1024px) {
   .signin-page {
-    grid-template-columns: 2fr 3fr;
+    grid-template-columns: 1fr 1.8fr;
   }
   .signin-panel {
     padding: var(--space-10);
