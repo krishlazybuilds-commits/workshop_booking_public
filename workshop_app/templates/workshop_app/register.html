@@ -170,7 +170,7 @@
                         Personal Information
                     </div>
 
-                    <div class="signup-field" style="max-width: 200px;">
+                    <div class="signup-field signup-field--title" style="max-width: 200px;">
                         <label for="id_title" class="required">Title</label>
                         {{ form.title }}
                         {% for error in form.title.errors %}
@@ -282,6 +282,25 @@
 
 <!-- Custom dropdown component -->
 <script src="{% static 'workshop_app/js/pg-dropdown.js' %}"></script>
+
+<script>
+(function() {
+    const titleSelect = document.getElementById('id_title');
+    const departmentSelect = document.getElementById('id_department');
+    const stateSelect = document.getElementById('id_state');
+
+    if (titleSelect) {
+        titleSelect.dataset.pgVariant = 'pills';
+    }
+
+    [departmentSelect, stateSelect].forEach(function(select) {
+        if (select) {
+            select.dataset.pgVariant = 'combobox';
+            select.dataset.pgSearchable = 'true';
+        }
+    });
+})();
+</script>
 
 <!-- Step progress highlight on scroll -->
 <script>

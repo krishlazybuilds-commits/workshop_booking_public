@@ -8,6 +8,47 @@
   'use strict';
 
   const SEARCH_THRESHOLD = 8; // Show search box if options > this
+  const VIEWPORT_GAP = 10;
+
+  function getVisibleOptions(container) {
+    return Array.from(container.querySelectorAll('.pg-dropdown__option')).filter(function (option) {
+      return option.style.display !== 'none';
+    });
+  }
+
+  function closeDropdown(wrapper) {
+    if (!wrapper) return;
+    wrapper.classList.remove('pg-dropdown--open');
+    wrapper.querySelector('.pg-dropdown__trigger').setAttribute('aria-expanded', 'false');
+    wrapper.style.removeProperty('--pg-dropdown-max-height');
+  }
+
+  function closeAllDropdowns(exceptWrapper) {
+    document.querySelectorAll('.pg-dropdown--open').forEach(function (dropdown) {
+      if (dropdown !== exceptWrapper) {
+        closeDropdown(dropdown);
+      }
+    });
+  }
+
+  function updateMenuPlacement(wrapper) {
+    var trigger = wrapper.querySelector('.pg-dropdown__trigger');
+    var menu = wrapper.querySelector('.pg-dropdown__menu');
+
+    if (!trigger || !menu) return;
+
+    var triggerRect = trigger.getBoundingClientRect();
+    var menuRect = menu.getBoundingClientRect();
+    var preferredHeight = menu.scrollHeight;
+    var menuHeight = Math.max(menuRect.height, preferredHeight);
+    var spaceBelow = Math.max(window.innerHeight - triggerRect.bottom - VIEWPORT_GAP, 0);
+    var spaceAbove = Math.max(triggerRect.top - VIEWPORT_GAP, 0);
+    var shouldOpenUp = spaceBelow < menuHeight && spaceAbove > spaceBelow;
+    var availableHeight = shouldOpenUp ? spaceAbove : spaceBelow;
+
+    wrapper.classList.toggle('pg-dropdown--up', shouldOpenUp);
+    wrapper.style.setProperty('--pg-dropdown-max-height', Math.max(Math.min(availableHeight, 320), 120) + 'px');
+  }
 
   function createDropdown(select) {
     // Skip if already upgraded
@@ -16,11 +57,13 @@
 
     const options = Array.from(select.options);
     const selectedIndex = select.selectedIndex;
-    const hasSearch = options.length > SEARCH_THRESHOLD;
+    const hasSearch = options.length > SEARCH_THRESHOLD || select.dataset.pgSearchable === 'true';
+    const variant = select.dataset.pgVariant || (hasSearch ? 'combobox' : 'default');
 
     // Create wrapper
     const wrapper = document.createElement('div');
     wrapper.className = 'pg-dropdown';
+    wrapper.classList.add('pg-dropdown--' + variant);
 
     // Create trigger button
     const trigger = document.createElement('button');
@@ -28,6 +71,7 @@
     trigger.className = 'pg-dropdown__trigger';
     trigger.setAttribute('aria-haspopup', 'listbox');
     trigger.setAttribute('aria-expanded', 'false');
+    trigger.setAttribute('aria-label', select.getAttribute('aria-label') || select.getAttribute('name') || 'Select option');
 
     const triggerText = document.createElement('span');
     triggerText.className = 'pg-dropdown__trigger-text';
@@ -68,6 +112,10 @@
     const optionsContainer = document.createElement('div');
     optionsContainer.className = 'pg-dropdown__options';
 
+    if (variant === 'pills') {
+      optionsContainer.classList.add('pg-dropdown__options--pills');
+    }
+
     // Build option items
     options.forEach(function (opt, i) {
       const item = document.createElement('div');
@@ -75,6 +123,14 @@
       item.setAttribute('role', 'option');
       item.dataset.value = opt.value;
       item.dataset.index = i;
+
+      if (variant === 'pills') {
+        item.classList.add('pg-dropdown__option--pill');
+      }
+
+      if (opt.value === '' || opt.textContent.startsWith('---')) {
+        item.classList.add('pg-dropdown__option--placeholder');
+      }
 
       const label = document.createElement('span');
       label.textContent = opt.textContent;
@@ -90,8 +146,23 @@
         item.classList.add('pg-dropdown__option--selected');
       }
 
+      if (variant === 'pills') {
+        item.setAttribute('tabindex', opt.value === '' ? '-1' : '0');
+      }
+
       item.addEventListener('click', function () {
+        if (opt.value === '') return;
         selectOption(wrapper, select, item, triggerText, optionsContainer);
+      });
+
+      item.addEventListener('keydown', function (e) {
+        if (variant !== 'pills') return;
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          if (opt.value !== '') {
+            selectOption(wrapper, select, item, triggerText, optionsContainer);
+          }
+        }
       });
 
       optionsContainer.appendChild(item);
@@ -110,12 +181,20 @@
     select.setAttribute('tabindex', '-1');
     select.setAttribute('aria-hidden', 'true');
 
-    // Toggle open/close
-    trigger.addEventListener('click', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      toggleDropdown(wrapper, searchInput);
-    });
+    if (variant === 'pills') {
+      wrapper.classList.add('pg-dropdown--static');
+      menu.classList.add('pg-dropdown__menu--static');
+      menu.setAttribute('aria-hidden', 'false');
+      trigger.setAttribute('aria-hidden', 'true');
+      trigger.tabIndex = -1;
+    } else {
+      // Toggle open/close
+      trigger.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleDropdown(wrapper, searchInput);
+      });
+    }
 
     // Search filter
     if (searchInput) {
@@ -129,37 +208,24 @@
     }
 
     // Keyboard navigation
-    trigger.addEventListener('keydown', function (e) {
-      handleKeyboard(e, wrapper, select, optionsContainer, triggerText, searchInput);
-    });
-    menu.addEventListener('keydown', function (e) {
-      handleKeyboard(e, wrapper, select, optionsContainer, triggerText, searchInput);
-    });
+    if (variant !== 'pills') {
+      trigger.addEventListener('keydown', function (e) {
+        handleKeyboard(e, wrapper, select, optionsContainer, triggerText, searchInput);
+      });
+      menu.addEventListener('keydown', function (e) {
+        handleKeyboard(e, wrapper, select, optionsContainer, triggerText, searchInput);
+      });
+    }
   }
 
   function toggleDropdown(wrapper, searchInput) {
     const isOpen = wrapper.classList.contains('pg-dropdown--open');
-    // Close all other dropdowns first
-    document.querySelectorAll('.pg-dropdown--open').forEach(function (d) {
-      d.classList.remove('pg-dropdown--open');
-      d.querySelector('.pg-dropdown__trigger').setAttribute('aria-expanded', 'false');
-    });
+    closeAllDropdowns(wrapper);
 
     if (!isOpen) {
-      // Detect if dropdown would overflow viewport and flip upward
-      var trigger = wrapper.querySelector('.pg-dropdown__trigger');
-      var triggerRect = trigger.getBoundingClientRect();
-      var menuMaxHeight = 220; // matches CSS max-height
-      var spaceBelow = window.innerHeight - triggerRect.bottom - 10;
-      var spaceAbove = triggerRect.top - 10;
-
-      wrapper.classList.remove('pg-dropdown--up');
-      if (spaceBelow < menuMaxHeight && spaceAbove > spaceBelow) {
-        wrapper.classList.add('pg-dropdown--up');
-      }
-
       wrapper.classList.add('pg-dropdown--open');
       wrapper.querySelector('.pg-dropdown__trigger').setAttribute('aria-expanded', 'true');
+      updateMenuPlacement(wrapper);
 
       // Reset menu scroll position
       var menu = wrapper.querySelector('.pg-dropdown__menu');
@@ -179,6 +245,10 @@
   }
 
   function selectOption(wrapper, select, item, triggerText, container) {
+    if (item.classList.contains('pg-dropdown__option--placeholder')) {
+      return;
+    }
+
     // Update native select
     select.selectedIndex = parseInt(item.dataset.index);
     select.dispatchEvent(new Event('change', { bubbles: true }));
@@ -193,9 +263,13 @@
     });
     item.classList.add('pg-dropdown__option--selected');
 
+    if (wrapper.classList.contains('pg-dropdown--pills')) {
+      item.focus();
+      return;
+    }
+
     // Close
-    wrapper.classList.remove('pg-dropdown--open');
-    wrapper.querySelector('.pg-dropdown__trigger').setAttribute('aria-expanded', 'false');
+    closeDropdown(wrapper);
     wrapper.querySelector('.pg-dropdown__trigger').focus();
   }
 
@@ -203,6 +277,10 @@
     const q = query.toLowerCase().trim();
     let hasVisible = false;
     container.querySelectorAll('.pg-dropdown__option').forEach(function (item) {
+      if (item.classList.contains('pg-dropdown__option--placeholder')) {
+        item.style.display = 'none';
+        return;
+      }
       const text = item.querySelector('span').textContent.toLowerCase();
       const match = !q || text.includes(q);
       item.style.display = match ? '' : 'none';
@@ -226,11 +304,10 @@
 
   function handleKeyboard(e, wrapper, select, container, triggerText, searchInput) {
     const isOpen = wrapper.classList.contains('pg-dropdown--open');
-    const options = Array.from(container.querySelectorAll('.pg-dropdown__option:not([style*="display: none"])'));
+    const options = getVisibleOptions(container);
 
     if (e.key === 'Escape') {
-      wrapper.classList.remove('pg-dropdown--open');
-      wrapper.querySelector('.pg-dropdown__trigger').setAttribute('aria-expanded', 'false');
+      closeDropdown(wrapper);
       wrapper.querySelector('.pg-dropdown__trigger').focus();
       e.preventDefault();
       return;
@@ -273,12 +350,17 @@
   // Close on outside click
   document.addEventListener('click', function (e) {
     if (!e.target.closest('.pg-dropdown')) {
-      document.querySelectorAll('.pg-dropdown--open').forEach(function (d) {
-        d.classList.remove('pg-dropdown--open');
-        d.querySelector('.pg-dropdown__trigger').setAttribute('aria-expanded', 'false');
-      });
+      closeAllDropdowns();
     }
   });
+
+  window.addEventListener('resize', function () {
+    document.querySelectorAll('.pg-dropdown--open').forEach(updateMenuPlacement);
+  });
+
+  window.addEventListener('scroll', function () {
+    document.querySelectorAll('.pg-dropdown--open').forEach(updateMenuPlacement);
+  }, true);
 
   // Initialize: upgrade all select.pg-input
   function init() {
