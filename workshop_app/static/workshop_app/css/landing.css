@@ -62,10 +62,25 @@
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-full);
   transition: all var(--duration-fast) var(--ease-smooth);
+  position: relative;
 }
 .pg-nav__link:hover {
   background: var(--muted);
   color: var(--accent);
+}
+.pg-nav__link.active {
+  color: var(--accent);
+}
+.pg-nav__link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
 }
 
 .pg-nav__cta {
@@ -439,7 +454,7 @@
 .workshop-card__header--violet { background: var(--accent); color: white; }
 .workshop-card__header--pink   { background: var(--secondary); color: white; }
 .workshop-card__header--yellow { background: var(--tertiary); color: var(--fg); }
-.workshop-card__header--mint   { background: var(--quaternary); color: var(--fg); }
+.workshop-card__header--mint   { background: var(--quaternary); color: white; }
 
 .workshop-card__header h3 {
   font-size: var(--text-lg);
@@ -654,6 +669,9 @@
 .pg-footer__col a:hover {
   color: var(--tertiary);
 }
+.pg-footer__col a.active {
+  color: white;
+}
 
 .pg-footer__bottom {
   border-top: 1px solid rgba(255,255,255,0.1);
@@ -673,9 +691,24 @@
   color: rgba(255,255,255,0.4);
   text-decoration: none;
   font-size: var(--text-sm);
+  position: relative;
+  transition: color var(--duration-fast);
 }
 .pg-footer__bottom-links a:hover {
   color: var(--accent);
+}
+.pg-footer__bottom-links a.active {
+  color: white;
+}
+.pg-footer__bottom-links a.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px;
 }
 
 /* ── Marquee ──────────────────────────────────── */

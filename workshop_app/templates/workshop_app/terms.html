@@ -1,0 +1,208 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="{% static 'workshop_app/img/favicon.svg' %}">
+    <title>Terms of Service — FOSSEE Workshops</title>
+    <meta name="description" content="Read the terms and conditions governing the use of the FOSSEE Workshop Booking platform.">
+
+    <link rel="stylesheet" href="{% static 'workshop_app/css/design-tokens.css' %}">
+    <link rel="stylesheet" href="{% static 'workshop_app/css/playful-geometric.css' %}">
+    <link rel="stylesheet" href="{% static 'workshop_app/css/landing.css' %}">
+    <link rel="stylesheet" href="{% static 'workshop_app/css/legal.css' %}">
+</head>
+<body>
+
+<div class="legal-page">
+
+<!-- ═══════════════════════════════════════════
+     NAVBAR
+     ═══════════════════════════════════════════ -->
+<nav class="pg-nav" id="main-nav">
+    <div class="pg-container">
+        <div class="pg-nav__inner">
+            <a href="/" class="pg-nav__logo">
+                <span class="pg-nav__logo-dot"></span>
+                FOSSEE Workshops
+            </a>
+            <ul class="pg-nav__links" id="nav-links">
+                <li><a href="/#features" class="pg-nav__link">Why FOSSEE</a></li>
+                <li><a href="/#how-it-works" class="pg-nav__link">How It Works</a></li>
+                <li><a href="/#workshops" class="pg-nav__link">Workshops</a></li>
+                <li class="pg-nav__cta">
+                    <a href="{% url 'workshop_app:login' %}" class="btn-outline" style="padding: 6px 20px; min-height: 40px; font-size: 0.875rem;">Sign In</a>
+                    <a href="{% url 'workshop_app:register' %}" class="btn-candy" style="padding: 6px 20px; min-height: 40px; font-size: 0.875rem;">
+                        Get Started
+                        <span class="btn-arrow">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </span>
+                    </a>
+                </li>
+            </ul>
+            <button class="pg-nav__hamburger" id="nav-toggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════ -->
+<section class="legal-hero">
+    <div class="legal-hero__shape legal-hero__shape--1"></div>
+    <div class="legal-hero__shape legal-hero__shape--2"></div>
+    <div class="legal-hero__shape legal-hero__shape--3"></div>
+    <div class="legal-hero__dots"></div>
+
+    <div class="pg-container">
+        <div class="legal-hero__content">
+            <span class="pg-badge pg-badge--pink legal-hero__badge">Legal</span>
+            <h1>Terms of <span style="color: var(--secondary);">Service</span></h1>
+            <p>The rules and guidelines that govern your use of the FOSSEE Workshop Booking platform.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     CONTENT
+     ═══════════════════════════════════════════ -->
+<div class="legal-body">
+    <div class="pg-container">
+        <div class="legal-content">
+
+            <div class="legal-callout">
+                <div class="legal-callout__icon" style="background: var(--secondary);">
+                    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                </div>
+                <div>
+                    <p><strong>Please read carefully.</strong> By registering for an account or using the FOSSEE Workshop Booking platform, you agree to be bound by these Terms of Service.</p>
+                </div>
+            </div>
+
+            <div class="legal-section">
+                <h2><span class="section-num" style="background: var(--secondary);">1</span> Acceptance of Terms</h2>
+                <p>By accessing or using the FOSSEE Workshop Booking platform, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service. If you do not agree, please do not use the platform.</p>
+            </div>
+
+            <div class="legal-section">
+                <h2><span class="section-num" style="background: var(--secondary);">2</span> Eligibility</h2>
+                <p>The platform is intended for use by faculty, coordinators, and students affiliated with recognized educational institutions in India. By registering, you represent that:</p>
+                <ul>
+                    <li>You are affiliated with a legitimate educational institution or organization</li>
+                    <li>The information you provide during registration is accurate and complete</li>
+                    <li>You will keep your account credentials secure and confidential</li>
+                </ul>
+            </div>
+
+            <div class="legal-section">
+                <h2><span class="section-num" style="background: var(--secondary);">3</span> Workshop Proposals</h2>
+                <p>When proposing a workshop through the platform:</p>
+                <ul>
+                    <li>You agree to provide accurate details about the venue, expected participants, and available infrastructure</li>
+                    <li>Workshop proposals are subject to review and approval by FOSSEE instructors</li>
+                    <li>Accepted workshops must be conducted as scheduled unless rescheduled through the platform</li>
+                    <li>FOSSEE reserves the right to decline or cancel a workshop at its discretion</li>
+                </ul>
+            </div>
+
+            <div class="legal-section">
+                <h2><span class="section-num" style="background: var(--secondary);">4</span> User Responsibilities</h2>
+                <p>As a registered user, you agree to:</p>
+                <ul>
+                    <li>Use the platform only for its intended purpose of coordinating FOSS workshops</li>
+                    <li>Not misrepresent your identity or institutional affiliation</li>
+                    <li>Not attempt to disrupt or compromise the platform's security or performance</li>
+                    <li>Respond to workshop-related communications in a timely manner</li>
+                </ul>
+            </div>
+
+            <div class="legal-section">
+                <h2><span class="section-num" style="background: var(--secondary);">5</span> Intellectual Property</h2>
+                <p>All workshop materials, curriculum content, and software tools provided through FOSSEE workshops are distributed under their respective open source licenses. The platform itself, including its design and codebase, is the property of the FOSSEE project.</p>
+            </div>
+
+            <div class="legal-section">
+                <h2><span class="section-num" style="background: var(--secondary);">6</span> Limitation of Liability</h2>
+                <p>The FOSSEE Workshop Booking platform is provided "as is" without warranties of any kind. FOSSEE shall not be held liable for any direct, indirect, incidental, or consequential damages arising from the use or inability to use the platform.</p>
+            </div>
+
+            <div class="legal-section">
+                <h2><span class="section-num" style="background: var(--secondary);">7</span> Termination</h2>
+                <p>FOSSEE reserves the right to suspend or terminate your account if you violate these Terms of Service, provide false information, or misuse the platform. You may also request account deletion at any time by contacting us.</p>
+            </div>
+
+            <div class="legal-section">
+                <h2><span class="section-num" style="background: var(--secondary);">8</span> Changes to Terms</h2>
+                <p>We reserve the right to modify these Terms at any time. Updated terms will be posted on this page. Continued use of the platform after modifications constitutes acceptance of the revised terms.</p>
+                <p style="margin-top: var(--space-6); font-size: var(--text-sm); color: var(--muted-fg); opacity: 0.7;"><em>Last updated: April 2026</em></p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════ -->
+<footer class="pg-footer">
+    <div class="pg-container">
+        <div class="pg-footer__inner">
+            <div>
+                <div class="pg-footer__brand">
+                    <span class="pg-footer__brand-dot"></span>
+                    FOSSEE Workshops
+                </div>
+                <p class="pg-footer__desc">Free & Open Source Software for Education. An initiative funded by MHRD, Govt. of India.</p>
+            </div>
+
+            <div class="pg-footer__col">
+                <h4>Platform</h4>
+                <ul>
+                    <li><a href="{% url 'workshop_app:login' %}">Sign In</a></li>
+                    <li><a href="{% url 'workshop_app:register' %}">Register</a></li>
+                    <li><a href="{% url 'statistics_app:public' %}">Statistics</a></li>
+                </ul>
+            </div>
+
+            <div class="pg-footer__col">
+                <h4>About</h4>
+                <ul>
+                    <li><a href="https://fossee.in" target="_blank" rel="noopener">FOSSEE Website</a></li>
+                    <li><a href="https://spoken-tutorial.org" target="_blank" rel="noopener">Spoken Tutorial</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="pg-footer__bottom">
+            <span>© 2026 FOSSEE. All rights reserved.</span>
+            <div class="pg-footer__bottom-links">
+                <a href="{% url 'workshop_app:privacy' %}"{% if current_page == 'privacy' %} class="active"{% endif %}>Privacy</a>
+                <a href="{% url 'workshop_app:terms' %}"{% if current_page == 'terms' %} class="active"{% endif %}>Terms</a>
+                <a href="{% url 'workshop_app:contact' %}"{% if current_page == 'contact' %} class="active"{% endif %}>Contact</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+const toggle = document.getElementById('nav-toggle');
+const links = document.getElementById('nav-links');
+toggle.addEventListener('click', () => links.classList.toggle('open'));
+links.addEventListener('click', (e) => {
+    if (e.target === links || e.target.classList.contains('pg-nav__link')) links.classList.remove('open');
+});
+links.querySelectorAll('.btn-candy, .btn-outline').forEach(btn => {
+    btn.addEventListener('click', () => links.classList.remove('open'));
+});
+window.addEventListener('scroll', () => {
+    const nav = document.getElementById('main-nav');
+    nav.style.background = window.scrollY > 50 ? 'rgba(255, 253, 245, 0.95)' : 'rgba(255, 253, 245, 0.85)';
+    nav.style.boxShadow = window.scrollY > 50 ? '0 2px 20px rgba(0,0,0,0.06)' : 'none';
+});
+</script>
+
+</body>
+</html>

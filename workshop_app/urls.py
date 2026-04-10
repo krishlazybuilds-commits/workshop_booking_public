@@ -51,4 +51,7 @@ urlpatterns = [
         name='view_own_profile'),
     url(r'^view_profile/(?P<user_id>\d+)$', views.view_profile,
         name='view_profile'),
+    url(r'^privacy/$', views.privacy_policy, name='privacy'),
+    url(r'^terms/$', views.terms_of_service, name='terms'),
+    url(r'^contact/$', views.contact_page, name='contact'),
 ]

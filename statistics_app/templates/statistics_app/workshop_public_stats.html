@@ -1,140 +1,451 @@
-{% extends 'workshop_app/base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="{% static 'workshop_app/img/favicon.svg' %}">
+    <title>Workshop Statistics — FOSSEE</title>
+    <meta name="description" content="Explore real-time statistics on FOSSEE workshops conducted across India.">
 
-{% block title %} Statistics {% endblock %}
+    <link rel="stylesheet" href="{% static 'workshop_app/css/design-tokens.css' %}">
+    <link rel="stylesheet" href="{% static 'workshop_app/css/playful-geometric.css' %}">
+    <link rel="stylesheet" href="{% static 'workshop_app/css/landing.css' %}">
+    <link rel="stylesheet" href="{% static 'workshop_app/css/statistics.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+</head>
+<body>
 
-{% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-3">
-            <form method="GET">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col-md-8">
-                                <h3><u>Filters</u></h3>
-                            </div>
-                            <div class="col-md-4">
-                                <a href="{% url 'statistics_app:public' %}" class="btn btn-outline-info">
-                                    <i class="fa fa-times"></i>&nbsp;Clear
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div>From date: {{form.from_date}}</div>
-                        <div>To date: {{form.to_date}}</div>
-                        <div>Workshop: {{form.workshop_type}}</div>
-                        <div>State: {{form.state}}</div>
-                        <div>{{form.sort.help_text}}: {{form.sort}}</div>
-                        {% if request.user.is_authenticated %}
-                        <div>{{form.show_workshops.help_text}}: {{form.show_workshops}}</div>
-                        {% endif %}
-                        <br>
-                        <div class="row justify-content-center">
-                            <div class="col-md-4">
-                                <button type="submit" class="btn btn-success">
-                                    <i class="fa fa-eye"></i>&nbsp;View
-                                </button>
-                            </div>
-                            <div class="col-md-6">
-                                <button type="submit" class="btn btn-info" name="download" value="download">
-                                    <i class="fa fa-download"></i>&nbsp;Download
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
+<div class="stats-page">
+
+<!-- ═══════════════════════════════════════════
+     NAVBAR
+     ═══════════════════════════════════════════ -->
+<nav class="pg-nav" id="main-nav">
+    <div class="pg-container">
+        <div class="pg-nav__inner">
+            <a href="/" class="pg-nav__logo">
+                <span class="pg-nav__logo-dot"></span>
+                FOSSEE Workshops
+            </a>
+            <ul class="pg-nav__links" id="nav-links">
+                <li><a href="/#features" class="pg-nav__link">Why FOSSEE</a></li>
+                <li><a href="/#how-it-works" class="pg-nav__link">How It Works</a></li>
+                <li><a href="/#workshops" class="pg-nav__link">Workshops</a></li>
+                <li class="pg-nav__cta">
+                    <a href="{% url 'workshop_app:login' %}" class="btn-outline" style="padding: 6px 20px; min-height: 40px; font-size: 0.875rem;">Sign In</a>
+                    <a href="{% url 'workshop_app:register' %}" class="btn-candy" style="padding: 6px 20px; min-height: 40px; font-size: 0.875rem;">
+                        Get Started
+                        <span class="btn-arrow">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </span>
+                    </a>
+                </li>
+            </ul>
+            <button class="pg-nav__hamburger" id="nav-toggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
         </div>
-        <div class="col">
-            <div class="row">
-                <div class="col-md-6">
-                    {% include "statistics_app/paginator.html" %}
+    </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════ -->
+<section class="stats-hero">
+    <div class="stats-hero__shape stats-hero__shape--1"></div>
+    <div class="stats-hero__shape stats-hero__shape--2"></div>
+    <div class="stats-hero__shape stats-hero__shape--3"></div>
+
+    <div class="pg-container">
+        <div class="stats-hero__content">
+            <span class="pg-badge pg-badge--yellow stats-hero__badge">Live Data</span>
+            <h1>Workshop <span style="color: var(--tertiary);">Statistics</span></h1>
+            <p>Real-time insights into FOSSEE workshops conducted across India.</p>
+
+            <div class="stats-hero__counters">
+                <div class="stats-counter">
+                    <div class="stats-counter__num">{{ objects.paginator.count }}</div>
+                    <div class="stats-counter__label">Workshops found</div>
                 </div>
-                <div class="col-md-3">
-                    <button class="btn btn-info" id="state_graph">
-                        <i class="fa fa-bar-chart"></i>&nbsp;State chart
-                    </button>
-                </div>
-                <div class="col-md-3">
-                    <button class="btn btn-info" id="type_graph">
-                        <i class="fa fa-bar-chart"></i>&nbsp;Workshops chart
-                    </button>
+                <div class="stats-counter">
+                    <div class="stats-counter__num">{{ objects.paginator.num_pages }}</div>
+                    <div class="stats-counter__label">Pages</div>
                 </div>
             </div>
-            <table class="table table-responsive-sm">
-                <thead>
-                    <tr>
-                        <th>Sr No.</th>
-                        <th>Coordinator Name</th>
-                        <th>Institute Name</th>
-                        <th>Instructor Name</th>
-                        <th>Workshop Name</th>
-                        <th>Workshop Date</th>
-                    </tr>
-                </thead>
-                {% csrf_token %}
-                {% for workshop in objects %}
-                    <tbody>
-                        <tr>
-                            <td>{{ forloop.counter0|add:objects.start_index}}</td>
-                            <td>{{ workshop.coordinator.get_full_name | capfirst }}</td>
-                            <td>{{ workshop.coordinator.profile.institute | capfirst }}</td>
-                            <td>{{ workshop.instructor.get_full_name | capfirst }}</td>
-                            <td>{{ workshop.workshop_type.name }}</td>
-                            <td>{{ workshop.date | date}}</td>
-                        </tr>
-                    </tbody>
-                {% endfor %}
-            </table>
-            {% include "statistics_app/paginator.html" %}
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     MAIN CONTENT
+     ═══════════════════════════════════════════ -->
+<div class="stats-body">
+    <div class="pg-container">
+        <div class="stats-layout">
+
+            <!-- ── Filter Sidebar ─────────── -->
+            <aside class="stats-filter">
+                <div class="stats-filter__header">
+                    <h3>
+                        <svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                        Filters
+                    </h3>
+                    <a href="{% url 'statistics_app:public' %}" class="stats-filter__clear">Clear all</a>
+                </div>
+
+                <form method="GET" id="stats-filter-form">
+                    <div class="stats-filter__field">
+                        <label for="id_from_date">From Date</label>
+                        {{ form.from_date }}
+                    </div>
+
+                    <div class="stats-filter__field">
+                        <label for="id_to_date">To Date</label>
+                        {{ form.to_date }}
+                    </div>
+
+                    <div class="stats-filter__field">
+                        <label for="id_workshop_type">Workshop Type</label>
+                        {{ form.workshop_type }}
+                    </div>
+
+                    <div class="stats-filter__field">
+                        <label for="id_state">State</label>
+                        {{ form.state }}
+                    </div>
+
+                    <div class="stats-filter__field">
+                        <label for="id_sort">Sort By</label>
+                        {{ form.sort }}
+                    </div>
+
+                    {% if request.user.is_authenticated %}
+                    <div class="stats-filter__checkbox">
+                        {{ form.show_workshops }}
+                        <label for="id_show_workshops">Show my workshops only</label>
+                    </div>
+                    {% endif %}
+
+                    <div class="stats-filter__actions">
+                        <button type="submit" class="btn-candy" style="font-size: var(--text-sm);">
+                            <svg viewBox="0 0 24 24" fill="none" style="width:16px;height:16px;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            View
+                        </button>
+                        <button type="submit" name="download" value="download" class="btn-outline" style="font-size: var(--text-sm);">
+                            <svg viewBox="0 0 24 24" fill="none" style="width:16px;height:16px;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            CSV
+                        </button>
+                    </div>
+                </form>
+            </aside>
+
+            <!-- ── Results ────────────────── -->
+            <div class="stats-results">
+
+                <!-- Toolbar -->
+                <div class="stats-toolbar">
+                    <div class="stats-toolbar__info">
+                        Showing page <strong>{{ objects.number }}</strong> of <strong>{{ objects.paginator.num_pages }}</strong>
+                        &nbsp;·&nbsp; <strong>{{ objects.paginator.count }}</strong> workshops
+                    </div>
+                    <div class="stats-toolbar__actions">
+                        <button class="stats-chart-btn" id="state_graph">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/></svg>
+                            State Chart
+                        </button>
+                        <button class="stats-chart-btn" id="type_graph">
+                            <svg viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+                            Workshop Chart
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="stats-table-wrap">
+                    {% if objects %}
+                    <table class="stats-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Coordinator</th>
+                                <th>Institute</th>
+                                <th>Instructor</th>
+                                <th>Workshop</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for workshop in objects %}
+                            <tr>
+                                <td><span class="stats-row-num">{{ forloop.counter0|add:objects.start_index }}</span></td>
+                                <td>{{ workshop.coordinator.get_full_name|capfirst }}</td>
+                                <td>{{ workshop.coordinator.profile.institute|capfirst }}</td>
+                                <td>{{ workshop.instructor.get_full_name|capfirst }}</td>
+                                <td><strong>{{ workshop.workshop_type.name }}</strong></td>
+                                <td>{{ workshop.date|date }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <div class="stats-empty">
+                        <svg class="stats-empty__icon" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <h3>No workshops found</h3>
+                        <p>Try adjusting your filters or date range.</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Pagination -->
+                {% if objects.paginator.num_pages > 1 %}
+                <nav class="stats-pagination">
+                    {% if objects.has_previous %}
+                    <a class="stats-page-link stats-page-link--nav"
+                       href="?page=1{% if request.GET.from_date %}&from_date={{ request.GET.from_date }}{% endif %}{% if request.GET.to_date %}&to_date={{ request.GET.to_date }}{% endif %}{% if request.GET.state %}&state={{ request.GET.state }}{% endif %}{% if request.GET.workshop_type %}&workshop_type={{ request.GET.workshop_type }}{% endif %}{% if request.GET.show_workshops %}&show_workshops={{ request.GET.show_workshops }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}">
+                        « First
+                    </a>
+                    {% endif %}
+
+                    {% for n in objects.paginator.page_range %}
+                        {% if objects.number == n %}
+                            <span class="stats-page-link stats-page-link--active">{{ n }}</span>
+                        {% elif n > objects.number|add:'-5' and n < objects.number|add:'5' %}
+                            <a class="stats-page-link"
+                               href="?page={{ n }}{% if request.GET.from_date %}&from_date={{ request.GET.from_date }}{% endif %}{% if request.GET.to_date %}&to_date={{ request.GET.to_date }}{% endif %}{% if request.GET.state %}&state={{ request.GET.state }}{% endif %}{% if request.GET.workshop_type %}&workshop_type={{ request.GET.workshop_type }}{% endif %}{% if request.GET.show_workshops %}&show_workshops={{ request.GET.show_workshops }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}">
+                                {{ n }}
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if objects.has_next %}
+                    <a class="stats-page-link stats-page-link--nav"
+                       href="?page={{ objects.paginator.num_pages }}{% if request.GET.from_date %}&from_date={{ request.GET.from_date }}{% endif %}{% if request.GET.to_date %}&to_date={{ request.GET.to_date }}{% endif %}{% if request.GET.state %}&state={{ request.GET.state }}{% endif %}{% if request.GET.workshop_type %}&workshop_type={{ request.GET.workshop_type }}{% endif %}{% if request.GET.show_workshops %}&show_workshops={{ request.GET.show_workshops }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}">
+                        Last »
+                    </a>
+                    {% endif %}
+                </nav>
+                {% endif %}
+
+            </div>
         </div>
     </div>
 </div>
 
-<!-- The Modal -->
-<div id="dialog" title="Workshops Statistics">
-    <canvas id="myChart"></canvas>
+<!-- ═══════════════════════════════════════════
+     CHART MODAL
+     ═══════════════════════════════════════════ -->
+<div class="stats-modal-overlay" id="chart-overlay">
+    <div class="stats-modal">
+        <div class="stats-modal__header">
+            <h3 id="chart-title">Workshop Statistics</h3>
+            <button class="stats-modal__close" id="chart-close">✕</button>
+        </div>
+        <canvas id="myChart" class="stats-modal__canvas"></canvas>
+    </div>
 </div>
 
-<script type="text/javascript">
-    var state_labels = {{ws_states|safe}};
-    var state_data = {{ws_count|safe}};
-    var type_labels = {{ws_type|safe}};
-    var type_data = {{ws_type_count|safe}};
-    var chart;
-    $("#state_graph").on("click", function() {
-        show_graph(state_labels, state_data, "State wise workshops");
-    });
-    $("#type_graph").on("click", function() {
-        show_graph(type_labels, type_data, "Type wise workshops");
-    });
+<!-- ═══════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════ -->
+<footer class="pg-footer">
+    <div class="pg-container">
+        <div class="pg-footer__inner">
+            <div>
+                <div class="pg-footer__brand">
+                    <span class="pg-footer__brand-dot"></span>
+                    FOSSEE Workshops
+                </div>
+                <p class="pg-footer__desc">Free & Open Source Software for Education. An initiative funded by MHRD, Govt. of India.</p>
+            </div>
 
-    function show_graph(labels, data, graph_name, chart_name) {
-        var ctx = document.getElementById('myChart').getContext('2d');
-        if(chart) chart.destroy();
-        chart = new Chart(ctx, {
-            // The type of chart we want to create
-            type: 'bar',
+            <div class="pg-footer__col">
+                <h4>Platform</h4>
+                <ul>
+                    <li><a href="{% url 'workshop_app:login' %}">Sign In</a></li>
+                    <li><a href="{% url 'workshop_app:register' %}">Register</a></li>
+                    <li><a href="{% url 'statistics_app:public' %}" class="active">Statistics</a></li>
+                </ul>
+            </div>
 
-            // The data for our dataset
-            data: {
-                labels: labels,
-                datasets: [{
-                    data: data,
-                    label: graph_name,
-                    backgroundColor: 'rgb(255, 99, 132)',
-                    borderColor: 'rgb(255, 99, 132)',
-                }]
-            },
-            // Configuration options go here
-            options: {}
-        });
-        $("#dialog").dialog({
-            width: 900,
-            height: 500
-        });
-    }
+            <div class="pg-footer__col">
+                <h4>About</h4>
+                <ul>
+                    <li><a href="https://fossee.in" target="_blank" rel="noopener">FOSSEE Website</a></li>
+                    <li><a href="https://spoken-tutorial.org" target="_blank" rel="noopener">Spoken Tutorial</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="pg-footer__bottom">
+            <span>© 2026 FOSSEE. All rights reserved.</span>
+            <div class="pg-footer__bottom-links">
+                <a href="{% url 'workshop_app:privacy' %}">Privacy</a>
+                <a href="{% url 'workshop_app:terms' %}">Terms</a>
+                <a href="{% url 'workshop_app:contact' %}">Contact</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════
+     SCRIPTS
+     ═══════════════════════════════════════════ -->
+<script>
+// Mobile nav toggle
+const toggle = document.getElementById('nav-toggle');
+const links = document.getElementById('nav-links');
+toggle.addEventListener('click', () => links.classList.toggle('open'));
+links.addEventListener('click', (e) => {
+    if (e.target === links || e.target.classList.contains('pg-nav__link')) links.classList.remove('open');
+});
+links.querySelectorAll('.btn-candy, .btn-outline').forEach(btn => {
+    btn.addEventListener('click', () => links.classList.remove('open'));
+});
+window.addEventListener('scroll', () => {
+    const nav = document.getElementById('main-nav');
+    nav.style.background = window.scrollY > 50 ? 'rgba(255, 253, 245, 0.95)' : 'rgba(255, 253, 245, 0.85)';
+    nav.style.boxShadow = window.scrollY > 50 ? '0 2px 20px rgba(0,0,0,0.06)' : 'none';
+});
+
+// Style the Django form inputs to match design system
+// Must run BEFORE pg-dropdown.js loads
+document.querySelectorAll('.stats-filter__field select').forEach(el => {
+    el.classList.remove('form-control');
+    el.classList.add('pg-input');
+});
+document.querySelectorAll('.stats-filter__field input').forEach(el => {
+    el.classList.remove('form-control');
+});
+
+// Configure dropdown variants before the script auto-inits
+var workshopTypeSelect = document.getElementById('id_workshop_type');
+var stateSelect = document.getElementById('id_state');
+var sortSelect = document.getElementById('id_sort');
+
+// Workshop type — searchable typeahead
+if (workshopTypeSelect) {
+    workshopTypeSelect.dataset.pgVariant = 'typeahead';
+    workshopTypeSelect.dataset.pgSearchable = 'true';
+    workshopTypeSelect.dataset.pgPlaceholder = 'All workshop types';
+}
+
+// State — searchable typeahead
+if (stateSelect) {
+    stateSelect.dataset.pgVariant = 'typeahead';
+    stateSelect.dataset.pgSearchable = 'true';
+    stateSelect.dataset.pgPlaceholder = 'All states';
+}
+
+// Sort — simple dropdown
+if (sortSelect) {
+    sortSelect.dataset.pgVariant = 'default';
+}
 </script>
 
-{% endblock %}
+<!-- Custom dropdown component (auto-inits on all select.pg-input) -->
+<script src="{% static 'workshop_app/js/pg-dropdown.js' %}"></script>
+
+<script>
+
+// Chart Modal
+var stateLabels = {{ ws_states|safe }};
+var stateData = {{ ws_count|safe }};
+var typeLabels = {{ ws_type|safe }};
+var typeData = {{ ws_type_count|safe }};
+var chart;
+var overlay = document.getElementById('chart-overlay');
+var closeBtn = document.getElementById('chart-close');
+var titleEl = document.getElementById('chart-title');
+
+// Color palette matching the design system
+var chartColors = [
+    'rgba(139, 92, 246, 0.8)',  // violet
+    'rgba(244, 114, 182, 0.8)', // pink
+    'rgba(251, 191, 36, 0.8)',  // yellow
+    'rgba(52, 211, 153, 0.8)',  // mint
+    'rgba(96, 165, 250, 0.8)',  // blue
+    'rgba(251, 146, 60, 0.8)',  // orange
+    'rgba(167, 139, 250, 0.8)', // light violet
+    'rgba(248, 113, 113, 0.8)', // red
+];
+
+function showChart(labels, data, name) {
+    var ctx = document.getElementById('myChart').getContext('2d');
+    if (chart) chart.destroy();
+
+    var colors = labels.map(function(_, i) {
+        return chartColors[i % chartColors.length];
+    });
+
+    chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                label: name,
+                backgroundColor: colors,
+                borderColor: '#0F172A',
+                borderWidth: 2,
+                borderRadius: 6,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        font: { family: "'Space Grotesk', sans-serif", weight: '700' }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        font: { family: "'Space Grotesk', sans-serif", weight: '600' }
+                    },
+                    grid: { color: 'rgba(0,0,0,0.05)' }
+                },
+                x: {
+                    ticks: {
+                        font: { family: "'Space Grotesk', sans-serif", weight: '600', size: 11 },
+                        maxRotation: 45
+                    },
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+
+    titleEl.textContent = name;
+    overlay.classList.add('open');
+}
+
+document.getElementById('state_graph').addEventListener('click', function() {
+    showChart(stateLabels, stateData, 'State-wise Workshops');
+});
+
+document.getElementById('type_graph').addEventListener('click', function() {
+    showChart(typeLabels, typeData, 'Type-wise Workshops');
+});
+
+closeBtn.addEventListener('click', function() {
+    overlay.classList.remove('open');
+});
+
+overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) overlay.classList.remove('open');
+});
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') overlay.classList.remove('open');
+});
+</script>
+
+</body>
+</html>

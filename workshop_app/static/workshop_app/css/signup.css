@@ -6,7 +6,8 @@
 
 /* ── Layout ───────────────────────────────────── */
 .signup-page {
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   display: grid;
   grid-template-columns: 1fr 1.4fr;
   background: var(--bg);
@@ -166,23 +167,12 @@
   padding: var(--space-12) var(--space-10);
   overflow-y: auto;
   background: var(--bg);
-  scrollbar-width: thin;
-  scrollbar-color: var(--accent) transparent;
+  scrollbar-width: none;
   animation: panel-slide-in 0.6s var(--ease-smooth) both;
 }
 
-/* Scrollbar styling for the form panel — prevent thumb from touching window edges */
 .signup-form-panel::-webkit-scrollbar {
-  width: 10px;
-}
-.signup-form-panel::-webkit-scrollbar-track {
-  background: transparent;
-  margin: 6px 0;
-}
-.signup-form-panel::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: var(--radius-full);
-  border: 2px solid var(--bg);
+  display: none;
 }
 
 .signup-form-wrap {

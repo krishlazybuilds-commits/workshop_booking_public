@@ -1,0 +1,216 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="{% static 'workshop_app/img/favicon.svg' %}">
+    <title>Contact Us — FOSSEE Workshops</title>
+    <meta name="description" content="Get in touch with the FOSSEE Workshops team for support, queries, or collaboration opportunities.">
+
+    <link rel="stylesheet" href="{% static 'workshop_app/css/design-tokens.css' %}">
+    <link rel="stylesheet" href="{% static 'workshop_app/css/playful-geometric.css' %}">
+    <link rel="stylesheet" href="{% static 'workshop_app/css/landing.css' %}">
+    <link rel="stylesheet" href="{% static 'workshop_app/css/legal.css' %}">
+</head>
+<body>
+
+<div class="legal-page">
+
+<!-- ═══════════════════════════════════════════
+     NAVBAR
+     ═══════════════════════════════════════════ -->
+<nav class="pg-nav" id="main-nav">
+    <div class="pg-container">
+        <div class="pg-nav__inner">
+            <a href="/" class="pg-nav__logo">
+                <span class="pg-nav__logo-dot"></span>
+                FOSSEE Workshops
+            </a>
+            <ul class="pg-nav__links" id="nav-links">
+                <li><a href="/#features" class="pg-nav__link">Why FOSSEE</a></li>
+                <li><a href="/#how-it-works" class="pg-nav__link">How It Works</a></li>
+                <li><a href="/#workshops" class="pg-nav__link">Workshops</a></li>
+                <li class="pg-nav__cta">
+                    <a href="{% url 'workshop_app:login' %}" class="btn-outline" style="padding: 6px 20px; min-height: 40px; font-size: 0.875rem;">Sign In</a>
+                    <a href="{% url 'workshop_app:register' %}" class="btn-candy" style="padding: 6px 20px; min-height: 40px; font-size: 0.875rem;">
+                        Get Started
+                        <span class="btn-arrow">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </span>
+                    </a>
+                </li>
+            </ul>
+            <button class="pg-nav__hamburger" id="nav-toggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════ -->
+<section class="legal-hero">
+    <div class="legal-hero__shape legal-hero__shape--1"></div>
+    <div class="legal-hero__shape legal-hero__shape--2"></div>
+    <div class="legal-hero__shape legal-hero__shape--3"></div>
+    <div class="legal-hero__dots"></div>
+
+    <div class="pg-container">
+        <div class="legal-hero__content">
+            <span class="pg-badge pg-badge--mint legal-hero__badge">Support</span>
+            <h1>Get in <span style="color: var(--quaternary);">Touch</span></h1>
+            <p>Have a question, suggestion, or need help? We'd love to hear from you.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     CONTACT CARDS
+     ═══════════════════════════════════════════ -->
+<div class="legal-body">
+    <div class="pg-container">
+        <div class="legal-content" style="max-width: 900px;">
+
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <div class="contact-card__icon" style="background: var(--accent);">
+                        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    </div>
+                    <h3>Email Us</h3>
+                    <p><a href="mailto:workshops@fossee.in">workshops@fossee.in</a></p>
+                </div>
+
+                <div class="contact-card">
+                    <div class="contact-card__icon" style="background: var(--secondary);">
+                        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    </div>
+                    <h3>Visit Us</h3>
+                    <p>FOSSEE, IIT Bombay<br>Powai, Mumbai 400076</p>
+                </div>
+
+                <div class="contact-card">
+                    <div class="contact-card__icon" style="background: var(--quaternary); border-color: var(--fg);">
+                        <svg viewBox="0 0 24 24" stroke="var(--fg)"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    </div>
+                    <h3>Website</h3>
+                    <p><a href="https://fossee.in" target="_blank" rel="noopener">fossee.in</a></p>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="contact-form-card">
+                <h2>Send us a <span class="text-accent">message</span></h2>
+                <p>Fill out the form below and we'll get back to you as soon as possible.</p>
+
+                <form id="contact-form">
+                    <div class="contact-row">
+                        <div class="contact-field">
+                            <label for="contact-name">Your Name</label>
+                            <input type="text" id="contact-name" placeholder="John Doe" required>
+                        </div>
+                        <div class="contact-field">
+                            <label for="contact-email">Email Address</label>
+                            <input type="email" id="contact-email" placeholder="john@example.com" required>
+                        </div>
+                    </div>
+
+                    <div class="contact-field">
+                        <label for="contact-subject">Subject</label>
+                        <input type="text" id="contact-subject" placeholder="Workshop inquiry, feedback, etc.">
+                    </div>
+
+                    <div class="contact-field">
+                        <label for="contact-message">Message</label>
+                        <textarea id="contact-message" placeholder="Tell us what's on your mind..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-candy" style="width: 100%; justify-content: center;">
+                        Send Message
+                        <span class="btn-arrow">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </span>
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════ -->
+<footer class="pg-footer">
+    <div class="pg-container">
+        <div class="pg-footer__inner">
+            <div>
+                <div class="pg-footer__brand">
+                    <span class="pg-footer__brand-dot"></span>
+                    FOSSEE Workshops
+                </div>
+                <p class="pg-footer__desc">Free & Open Source Software for Education. An initiative funded by MHRD, Govt. of India.</p>
+            </div>
+
+            <div class="pg-footer__col">
+                <h4>Platform</h4>
+                <ul>
+                    <li><a href="{% url 'workshop_app:login' %}">Sign In</a></li>
+                    <li><a href="{% url 'workshop_app:register' %}">Register</a></li>
+                    <li><a href="{% url 'statistics_app:public' %}">Statistics</a></li>
+                </ul>
+            </div>
+
+            <div class="pg-footer__col">
+                <h4>About</h4>
+                <ul>
+                    <li><a href="https://fossee.in" target="_blank" rel="noopener">FOSSEE Website</a></li>
+                    <li><a href="https://spoken-tutorial.org" target="_blank" rel="noopener">Spoken Tutorial</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="pg-footer__bottom">
+            <span>© 2026 FOSSEE. All rights reserved.</span>
+            <div class="pg-footer__bottom-links">
+                <a href="{% url 'workshop_app:privacy' %}"{% if current_page == 'privacy' %} class="active"{% endif %}>Privacy</a>
+                <a href="{% url 'workshop_app:terms' %}"{% if current_page == 'terms' %} class="active"{% endif %}>Terms</a>
+                <a href="{% url 'workshop_app:contact' %}"{% if current_page == 'contact' %} class="active"{% endif %}>Contact</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+const toggle = document.getElementById('nav-toggle');
+const links = document.getElementById('nav-links');
+toggle.addEventListener('click', () => links.classList.toggle('open'));
+links.addEventListener('click', (e) => {
+    if (e.target === links || e.target.classList.contains('pg-nav__link')) links.classList.remove('open');
+});
+links.querySelectorAll('.btn-candy, .btn-outline').forEach(btn => {
+    btn.addEventListener('click', () => links.classList.remove('open'));
+});
+window.addEventListener('scroll', () => {
+    const nav = document.getElementById('main-nav');
+    nav.style.background = window.scrollY > 50 ? 'rgba(255, 253, 245, 0.95)' : 'rgba(255, 253, 245, 0.85)';
+    nav.style.boxShadow = window.scrollY > 50 ? '0 2px 20px rgba(0,0,0,0.06)' : 'none';
+});
+
+// Simple form submission handler (mailto fallback)
+document.getElementById('contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var name = document.getElementById('contact-name').value;
+    var email = document.getElementById('contact-email').value;
+    var subject = document.getElementById('contact-subject').value || 'Workshop Inquiry';
+    var message = document.getElementById('contact-message').value;
+
+    var body = 'Name: ' + name + '\nEmail: ' + email + '\n\n' + message;
+    var mailtoLink = 'mailto:workshops@fossee.in?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    window.location.href = mailtoLink;
+});
+</script>
+
+</body>
+</html>

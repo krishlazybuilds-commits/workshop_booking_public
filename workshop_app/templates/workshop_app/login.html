@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="{% static 'workshop_app/img/favicon.svg' %}">
     <title>Sign In — FOSSEE Workshops</title>
     <meta name="description" content="Sign in to your FOSSEE Workshop account to propose, manage, and attend workshops.">
 
@@ -58,7 +59,7 @@
             </a>
 
             <h2>Welcome back to <span style="color: var(--tertiary);">learning.</span></h2>
-            <p>Access your dashboard to manage workshops, track proposals, and connect with instructors from IIT Bombay.</p>
+            <p>Access your dashboard to manage workshops, track proposals, and connect with expert instructors.</p>
 
             <div class="signin-panel__stats">
                 <div class="signin-panel__stat">
@@ -197,24 +198,53 @@
         setTimeout(function() {
             overlay.classList.remove('page-transition--exit');
         }, 1200);
+    } else {
+        // ── Direct visit / refresh: show a quick reveal ──
+        textEl.textContent = 'Sign In';
+        document.documentElement.classList.add('page-transitioning');
+
+        setTimeout(function() {
+            document.documentElement.classList.remove('page-transitioning');
+            overlay.classList.add('page-transition--exit');
+        }, 350);
+
+        setTimeout(function() {
+            overlay.classList.remove('page-transition--exit');
+        }, 1000);
     }
 
     // ── Exit: navigating to signup ──
     var panel = document.querySelector('.signin-form-panel');
     var navBtn = panel && panel.querySelector('a.btn-outline');
-    if (!navBtn) return;
+    if (navBtn) {
+        navBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            var href = this.href;
+            var pageName = 'Create Account';
 
-    navBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        var href = this.href;
-        var pageName = 'Create Account';
+            sessionStorage.setItem('pageTransitionName', pageName);
+            textEl.textContent = pageName;
+            overlay.classList.add('page-transition--enter');
 
-        sessionStorage.setItem('pageTransitionName', pageName);
-        textEl.textContent = pageName;
-        overlay.classList.add('page-transition--enter');
+            setTimeout(function() { window.location.href = href; }, 600);
+        });
+    }
 
-        setTimeout(function() { window.location.href = href; }, 600);
-    });
+    // ── Exit: navigating to forgot password ──
+    var forgotLink = document.querySelector('.signin-card__forgot');
+    if (forgotLink) {
+        forgotLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            var href = this.href;
+            var pageName = 'Reset Password';
+
+            sessionStorage.setItem('pageTransitionName', pageName);
+            textEl.textContent = pageName;
+            overlay.classList.add('page-transition--enter');
+
+            setTimeout(function() { window.location.href = href; }, 600);
+        });
+    }
 })();
 </script>
 

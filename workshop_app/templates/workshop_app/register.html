@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="{% static 'workshop_app/img/favicon.svg' %}">
     <title>Create Account — FOSSEE Workshops</title>
-    <meta name="description" content="Register as a coordinator to propose and manage free FOSS workshops from IIT Bombay.">
+    <meta name="description" content="Register as a coordinator to propose and manage free FOSS workshops.">
 
     <!-- Design System CSS -->
     <link rel="stylesheet" href="{% static 'workshop_app/css/design-tokens.css' %}">
@@ -56,7 +57,7 @@
                     <span class="signup-panel__check-icon">
                         <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
                     </span>
-                    IIT Bombay certified instructors
+                    FOSSEE certified instructors
                 </li>
                 <li class="signup-panel__check">
                     <span class="signup-panel__check-icon">
@@ -476,6 +477,19 @@
         setTimeout(function() {
             overlay.classList.remove('page-transition--exit');
         }, 1200);
+    } else {
+        // ── Direct visit / refresh: show a quick reveal ──
+        textEl.textContent = 'Create Account';
+        document.documentElement.classList.add('page-transitioning');
+
+        setTimeout(function() {
+            document.documentElement.classList.remove('page-transitioning');
+            overlay.classList.add('page-transition--exit');
+        }, 350);
+
+        setTimeout(function() {
+            overlay.classList.remove('page-transition--exit');
+        }, 1000);
     }
 
     // ── Exit: navigating to signin ──

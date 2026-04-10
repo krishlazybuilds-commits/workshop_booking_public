@@ -500,3 +500,20 @@ def view_own_profile(request):
 
     return render(request, "workshop_app/view_profile.html",
                   {"profile": profile, "Workshops": None, "form": form})
+
+
+# Legal / Info pages
+
+def privacy_policy(request):
+    """Privacy Policy page"""
+    return render(request, 'workshop_app/privacy.html', {'current_page': 'privacy'})
+
+
+def terms_of_service(request):
+    """Terms of Service page"""
+    return render(request, 'workshop_app/terms.html', {'current_page': 'terms'})
+
+
+def contact_page(request):
+    """Contact page"""
+    return render(request, 'workshop_app/contact.html', {'current_page': 'contact'})

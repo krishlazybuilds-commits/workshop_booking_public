@@ -1,0 +1,210 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="{% static 'workshop_app/img/favicon.svg' %}">
+    <title>Privacy Policy — FOSSEE Workshops</title>
+    <meta name="description" content="Learn how FOSSEE Workshops collects, uses, and protects your personal information.">
+
+    <link rel="stylesheet" href="{% static 'workshop_app/css/design-tokens.css' %}">
+    <link rel="stylesheet" href="{% static 'workshop_app/css/playful-geometric.css' %}">
+    <link rel="stylesheet" href="{% static 'workshop_app/css/landing.css' %}">
+    <link rel="stylesheet" href="{% static 'workshop_app/css/legal.css' %}">
+</head>
+<body>
+
+<div class="legal-page">
+
+<!-- ═══════════════════════════════════════════
+     NAVBAR
+     ═══════════════════════════════════════════ -->
+<nav class="pg-nav" id="main-nav">
+    <div class="pg-container">
+        <div class="pg-nav__inner">
+            <a href="/" class="pg-nav__logo">
+                <span class="pg-nav__logo-dot"></span>
+                FOSSEE Workshops
+            </a>
+            <ul class="pg-nav__links" id="nav-links">
+                <li><a href="/#features" class="pg-nav__link">Why FOSSEE</a></li>
+                <li><a href="/#how-it-works" class="pg-nav__link">How It Works</a></li>
+                <li><a href="/#workshops" class="pg-nav__link">Workshops</a></li>
+                <li class="pg-nav__cta">
+                    <a href="{% url 'workshop_app:login' %}" class="btn-outline" style="padding: 6px 20px; min-height: 40px; font-size: 0.875rem;">Sign In</a>
+                    <a href="{% url 'workshop_app:register' %}" class="btn-candy" style="padding: 6px 20px; min-height: 40px; font-size: 0.875rem;">
+                        Get Started
+                        <span class="btn-arrow">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </span>
+                    </a>
+                </li>
+            </ul>
+            <button class="pg-nav__hamburger" id="nav-toggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════ -->
+<section class="legal-hero">
+    <div class="legal-hero__shape legal-hero__shape--1"></div>
+    <div class="legal-hero__shape legal-hero__shape--2"></div>
+    <div class="legal-hero__shape legal-hero__shape--3"></div>
+    <div class="legal-hero__dots"></div>
+
+    <div class="pg-container">
+        <div class="legal-hero__content">
+            <span class="pg-badge pg-badge--violet legal-hero__badge">Legal</span>
+            <h1>Privacy <span style="color: var(--tertiary);">Policy</span></h1>
+            <p>How we collect, use, and protect your information when you use the FOSSEE Workshop Booking platform.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     CONTENT
+     ═══════════════════════════════════════════ -->
+<div class="legal-body">
+    <div class="pg-container">
+        <div class="legal-content">
+
+            <div class="legal-callout">
+                <div class="legal-callout__icon" style="background: var(--accent);">
+                    <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <div>
+                    <p><strong>Your privacy matters to us.</strong> This policy explains what data we collect, why we collect it, and how we keep it safe. FOSSEE is committed to transparency and responsible data handling.</p>
+                </div>
+            </div>
+
+            <div class="legal-section">
+                <h2><span class="section-num">1</span> Information We Collect</h2>
+                <p>When you register on the FOSSEE Workshop Booking platform, we collect the following information:</p>
+                <ul>
+                    <li>Your name, email address, and phone number</li>
+                    <li>Institutional affiliation, department, and location</li>
+                    <li>Username and encrypted password for account access</li>
+                    <li>Workshop proposals and participation history</li>
+                </ul>
+            </div>
+
+            <div class="legal-section">
+                <h2><span class="section-num">2</span> How We Use Your Information</h2>
+                <p>We use the information we collect to:</p>
+                <ul>
+                    <li>Create and manage your workshop coordinator account</li>
+                    <li>Facilitate communication between coordinators and instructors</li>
+                    <li>Send workshop confirmations, reminders, and updates via email</li>
+                    <li>Generate anonymized statistics about workshop reach and impact</li>
+                    <li>Improve the platform's functionality and user experience</li>
+                </ul>
+            </div>
+
+            <div class="legal-section">
+                <h2><span class="section-num">3</span> Data Sharing</h2>
+                <p>We do not sell, trade, or rent your personal information to third parties. Your data may be shared in limited circumstances:</p>
+                <ul>
+                    <li>With FOSSEE instructors assigned to your workshop for coordination purposes</li>
+                    <li>In anonymized, aggregated form for educational research and reporting</li>
+                    <li>When required by law or to protect the rights and safety of users</li>
+                </ul>
+            </div>
+
+            <div class="legal-section">
+                <h2><span class="section-num">4</span> Data Security</h2>
+                <p>We implement appropriate technical and organizational measures to protect your personal data against unauthorized access, alteration, or destruction. Passwords are stored using industry-standard hashing algorithms and are never stored in plain text.</p>
+            </div>
+
+            <div class="legal-section">
+                <h2><span class="section-num">5</span> Cookies</h2>
+                <p>The platform uses essential cookies for session management and authentication. We do not use third-party tracking cookies or advertising cookies.</p>
+            </div>
+
+            <div class="legal-section">
+                <h2><span class="section-num">6</span> Your Rights</h2>
+                <p>You have the right to:</p>
+                <ul>
+                    <li>Access and review your personal information through your profile</li>
+                    <li>Request correction of inaccurate data</li>
+                    <li>Request deletion of your account and associated data</li>
+                </ul>
+                <p>To exercise these rights, please contact us at the email address provided on our <a href="{% url 'workshop_app:contact' %}">Contact page</a>.</p>
+            </div>
+
+            <div class="legal-section">
+                <h2><span class="section-num">7</span> Changes to This Policy</h2>
+                <p>We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated revision date. Continued use of the platform after changes constitutes acceptance of the revised policy.</p>
+                <p style="margin-top: var(--space-6); font-size: var(--text-sm); color: var(--muted-fg); opacity: 0.7;"><em>Last updated: April 2026</em></p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════ -->
+<footer class="pg-footer">
+    <div class="pg-container">
+        <div class="pg-footer__inner">
+            <div>
+                <div class="pg-footer__brand">
+                    <span class="pg-footer__brand-dot"></span>
+                    FOSSEE Workshops
+                </div>
+                <p class="pg-footer__desc">Free & Open Source Software for Education. An initiative funded by MHRD, Govt. of India.</p>
+            </div>
+
+            <div class="pg-footer__col">
+                <h4>Platform</h4>
+                <ul>
+                    <li><a href="{% url 'workshop_app:login' %}">Sign In</a></li>
+                    <li><a href="{% url 'workshop_app:register' %}">Register</a></li>
+                    <li><a href="{% url 'statistics_app:public' %}">Statistics</a></li>
+                </ul>
+            </div>
+
+            <div class="pg-footer__col">
+                <h4>About</h4>
+                <ul>
+                    <li><a href="https://fossee.in" target="_blank" rel="noopener">FOSSEE Website</a></li>
+                    <li><a href="https://spoken-tutorial.org" target="_blank" rel="noopener">Spoken Tutorial</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="pg-footer__bottom">
+            <span>© 2026 FOSSEE. All rights reserved.</span>
+            <div class="pg-footer__bottom-links">
+                <a href="{% url 'workshop_app:privacy' %}"{% if current_page == 'privacy' %} class="active"{% endif %}>Privacy</a>
+                <a href="{% url 'workshop_app:terms' %}"{% if current_page == 'terms' %} class="active"{% endif %}>Terms</a>
+                <a href="{% url 'workshop_app:contact' %}"{% if current_page == 'contact' %} class="active"{% endif %}>Contact</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+const toggle = document.getElementById('nav-toggle');
+const links = document.getElementById('nav-links');
+toggle.addEventListener('click', () => links.classList.toggle('open'));
+links.addEventListener('click', (e) => {
+    if (e.target === links || e.target.classList.contains('pg-nav__link')) links.classList.remove('open');
+});
+links.querySelectorAll('.btn-candy, .btn-outline').forEach(btn => {
+    btn.addEventListener('click', () => links.classList.remove('open'));
+});
+window.addEventListener('scroll', () => {
+    const nav = document.getElementById('main-nav');
+    nav.style.background = window.scrollY > 50 ? 'rgba(255, 253, 245, 0.95)' : 'rgba(255, 253, 245, 0.85)';
+    nav.style.boxShadow = window.scrollY > 50 ? '0 2px 20px rgba(0,0,0,0.06)' : 'none';
+});
+</script>
+
+</body>
+</html>
