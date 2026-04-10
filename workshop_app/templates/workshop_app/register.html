@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="{% static 'workshop_app/css/design-tokens.css' %}">
     <link rel="stylesheet" href="{% static 'workshop_app/css/playful-geometric.css' %}">
     <link rel="stylesheet" href="{% static 'workshop_app/css/signup.css' %}">
+
+    <!-- Prevent flash: cover screen if arriving via page transition -->
+    <script>if(sessionStorage.getItem('pageTransitionName')){document.documentElement.classList.add('page-transitioning');}</script>
 </head>
 <body>
 
@@ -448,9 +451,34 @@
 })();
 </script>
 
-<!-- Panel transition -->
+<!-- Page transition overlay -->
+<div class="page-transition" id="page-transition">
+    <span class="page-transition__dot"></span>
+    <span class="page-transition__text"></span>
+</div>
+
 <script>
 (function() {
+    var overlay = document.getElementById('page-transition');
+    var textEl = overlay.querySelector('.page-transition__text');
+
+    // ── Reveal: arriving from another auth page ──
+    var transName = sessionStorage.getItem('pageTransitionName');
+    if (transName) {
+        sessionStorage.removeItem('pageTransitionName');
+        textEl.textContent = transName;
+
+        setTimeout(function() {
+            document.documentElement.classList.remove('page-transitioning');
+            overlay.classList.add('page-transition--exit');
+        }, 500);
+
+        setTimeout(function() {
+            overlay.classList.remove('page-transition--exit');
+        }, 1200);
+    }
+
+    // ── Exit: navigating to signin ──
     var panel = document.querySelector('.signup-form-panel');
     var navBtn = panel && panel.querySelector('a.btn-outline');
     if (!navBtn) return;
@@ -458,8 +486,13 @@
     navBtn.addEventListener('click', function(e) {
         e.preventDefault();
         var href = this.href;
-        panel.classList.add('panel-slide-out');
-        setTimeout(function() { window.location.href = href; }, 400);
+        var pageName = 'Sign In';
+
+        sessionStorage.setItem('pageTransitionName', pageName);
+        textEl.textContent = pageName;
+        overlay.classList.add('page-transition--enter');
+
+        setTimeout(function() { window.location.href = href; }, 600);
     });
 })();
 </script>

@@ -387,19 +387,100 @@ p {
 .delay-4 { animation-delay: 0.4s; }
 .delay-5 { animation-delay: 0.5s; }
 
-/* Panel slide transitions for auth pages */
+/* Panel slide-in for auth form panels */
 @keyframes panel-slide-in {
   from { opacity: 0; transform: translateX(80px); }
   to   { opacity: 1; transform: translateX(0); }
 }
 
-@keyframes panel-slide-out {
-  from { opacity: 1; transform: translateX(0); }
-  to   { opacity: 0; transform: translateX(80px); }
+/* ────────────────────────────────────────────────
+   PAGE TRANSITION OVERLAY
+   ──────────────────────────────────────────────── */
+
+.page-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: var(--space-3);
+  background: var(--fg);
+  clip-path: inset(0 0 100% 0);
+  pointer-events: none;
 }
 
-.panel-slide-out {
-  animation: panel-slide-out 0.4s var(--ease-smooth) forwards !important;
+/* Immediately cover screen on page load (set via early script) */
+.page-transitioning .page-transition {
+  clip-path: inset(0 0 0 0);
+}
+
+/* Wipe in from bottom — exiting current page */
+.page-transition--enter {
+  animation: wipe-in 0.5s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+  pointer-events: all;
+}
+
+/* Wipe out upward — revealing new page */
+.page-transition--exit {
+  animation: wipe-out 0.55s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+}
+
+@keyframes wipe-in {
+  from { clip-path: inset(0 0 100% 0); }
+  to   { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes wipe-out {
+  from { clip-path: inset(0 0 0 0); }
+  to   { clip-path: inset(100% 0 0 0); }
+}
+
+/* Transition content */
+.page-transition__dot {
+  width: 14px;
+  height: 14px;
+  background: var(--accent);
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s;
+}
+
+.page-transition__text {
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 8vw, 4.768rem);
+  font-weight: 800;
+  color: white;
+  letter-spacing: -0.03em;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s;
+}
+
+.page-transition--enter .page-transition__dot,
+.page-transitioning .page-transition__dot {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.page-transition--enter .page-transition__text,
+.page-transitioning .page-transition__text {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-transition--exit .page-transition__text {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: all 0.15s ease;
+}
+
+.page-transition--exit .page-transition__dot {
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.1s ease;
 }
 
 /* ────────────────────────────────────────────────
