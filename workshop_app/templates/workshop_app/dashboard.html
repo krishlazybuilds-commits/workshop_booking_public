@@ -1,0 +1,340 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="{% static 'workshop_app/img/favicon.svg' %}">
+    <title>Dashboard — FOSSEE Workshops</title>
+    <meta name="description" content="Your FOSSEE Workshop dashboard — manage, track, and explore workshops.">
+
+    <link rel="stylesheet" href="{% static 'workshop_app/css/design-tokens.css' %}">
+    <link rel="stylesheet" href="{% static 'workshop_app/css/playful-geometric.css' %}">
+    <link rel="stylesheet" href="{% static 'workshop_app/css/landing.css' %}">
+    <link rel="stylesheet" href="{% static 'workshop_app/css/dashboard.css' %}">
+
+    <!-- Prevent flash -->
+    <script>if(sessionStorage.getItem('pageTransitionName')){document.documentElement.classList.add('page-transitioning');}</script>
+</head>
+<body>
+
+<div class="dash-page">
+
+<!-- ═══════════════════════════════════════════
+     NAVBAR
+     ═══════════════════════════════════════════ -->
+<nav class="pg-nav" id="main-nav" style="background: rgba(255,253,245,0.95);">
+    <div class="pg-container">
+        <div class="pg-nav__inner">
+            <a href="{% url 'workshop_app:dashboard' %}" class="pg-nav__logo">
+                <span class="pg-nav__logo-dot"></span>
+                FOSSEE Workshops
+            </a>
+            <ul class="pg-nav__links" id="nav-links">
+                <li><a href="/" class="pg-nav__link">Home</a></li>
+                <li><a href="{% url 'statistics_app:public' %}" class="pg-nav__link">Statistics</a></li>
+                {% if not is_instructor %}
+                <li><a href="{% url 'workshop_app:propose_workshop' %}" class="pg-nav__link">Propose Workshop</a></li>
+                {% endif %}
+                <li><a href="{% url 'workshop_app:workshop_type_list' %}" class="pg-nav__link">Workshop Types</a></li>
+                <li class="pg-nav__cta">
+                    <a href="{% url 'workshop_app:view_own_profile' %}" class="btn-outline" style="padding: 6px 16px; min-height: 38px; font-size: 0.85rem;">
+                        <svg viewBox="0 0 24 24" fill="none" style="width:16px;height:16px;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        {{ user.first_name }}
+                    </a>
+                    <a href="{% url 'workshop_app:logout' %}" class="btn-candy" style="padding: 6px 16px; min-height: 38px; font-size: 0.85rem;">
+                        Sign Out
+                    </a>
+                </li>
+            </ul>
+            <button class="pg-nav__hamburger" id="nav-toggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     HERO / GREETING
+     ═══════════════════════════════════════════ -->
+<section class="dash-hero">
+    <div class="dash-hero__shape dash-hero__shape--1"></div>
+    <div class="dash-hero__shape dash-hero__shape--2"></div>
+    <div class="dash-hero__shape dash-hero__shape--3"></div>
+
+    <div class="pg-container">
+        <div class="dash-hero__content">
+            <span class="pg-badge pg-badge--violet">Dashboard</span>
+            <h1>Welcome back, <span style="color: var(--tertiary);">{{ user.first_name }}</span></h1>
+            <p>Here's an overview of your workshop activity.</p>
+        </div>
+
+        <!-- Stat Cards -->
+        <div class="dash-stats">
+            <div class="dash-stat-card">
+                <div class="dash-stat-card__icon" style="background: var(--accent);">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </div>
+                <div class="dash-stat-card__data">
+                    <div class="dash-stat-card__num">{{ total_workshops }}</div>
+                    <div class="dash-stat-card__label">Total Workshops</div>
+                </div>
+            </div>
+
+            <div class="dash-stat-card">
+                <div class="dash-stat-card__icon" style="background: var(--quaternary);">
+                    <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <div class="dash-stat-card__data">
+                    <div class="dash-stat-card__num">{{ accepted_workshops }}</div>
+                    <div class="dash-stat-card__label">Accepted</div>
+                </div>
+            </div>
+
+            <div class="dash-stat-card">
+                <div class="dash-stat-card__icon" style="background: var(--tertiary);">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <div class="dash-stat-card__data">
+                    <div class="dash-stat-card__num">{{ pending_workshops }}</div>
+                    <div class="dash-stat-card__label">Pending</div>
+                </div>
+            </div>
+
+            <div class="dash-stat-card">
+                <div class="dash-stat-card__icon" style="background: var(--secondary);">
+                    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <div class="dash-stat-card__data">
+                    <div class="dash-stat-card__num">{{ upcoming_workshops }}</div>
+                    <div class="dash-stat-card__label">Upcoming</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     MAIN CONTENT
+     ═══════════════════════════════════════════ -->
+<div class="dash-body">
+    <div class="pg-container">
+        <div class="dash-grid">
+
+            <!-- Recent Workshops -->
+            <div class="dash-card dash-card--wide">
+                <div class="dash-card__header">
+                    <h2>
+                        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        Recent Workshops
+                    </h2>
+                    {% if is_instructor %}
+                    <a href="{% url 'workshop_app:workshop_status_instructor' %}" class="dash-card__link">View all →</a>
+                    {% else %}
+                    <a href="{% url 'workshop_app:workshop_status_coordinator' %}" class="dash-card__link">View all →</a>
+                    {% endif %}
+                </div>
+
+                {% if workshops %}
+                <div class="dash-table-wrap">
+                    <table class="dash-table">
+                        <thead>
+                            <tr>
+                                <th>Workshop</th>
+                                {% if is_instructor %}
+                                <th>Coordinator</th>
+                                {% else %}
+                                <th>Instructor</th>
+                                {% endif %}
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for workshop in workshops %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'workshop_app:workshop_details' workshop.id %}" class="dash-table__link">
+                                        {{ workshop.workshop_type.name|capfirst }}
+                                    </a>
+                                </td>
+                                {% if is_instructor %}
+                                <td>{{ workshop.coordinator.get_full_name|capfirst }}</td>
+                                {% else %}
+                                <td>{{ workshop.instructor.get_full_name|capfirst|default:"—" }}</td>
+                                {% endif %}
+                                <td>{{ workshop.date|date }}</td>
+                                <td>
+                                    {% if workshop.status == 1 %}
+                                    <span class="dash-badge dash-badge--success">Accepted</span>
+                                    {% elif workshop.status == 0 %}
+                                    <span class="dash-badge dash-badge--warning">Pending</span>
+                                    {% else %}
+                                    <span class="dash-badge dash-badge--danger">Rejected</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="dash-empty">
+                    <svg class="dash-empty__icon" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                    <h3>No workshops yet</h3>
+                    <p>{% if is_instructor %}No workshops assigned to you yet.{% else %}Propose your first workshop to get started!{% endif %}</p>
+                    {% if not is_instructor %}
+                    <a href="{% url 'workshop_app:propose_workshop' %}" class="btn-candy" style="margin-top: var(--space-4);">
+                        Propose Workshop
+                        <span class="btn-arrow">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </span>
+                    </a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="dash-card">
+                <div class="dash-card__header">
+                    <h2>
+                        <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        Quick Actions
+                    </h2>
+                </div>
+                <div class="dash-actions">
+                    {% if not is_instructor %}
+                    <a href="{% url 'workshop_app:propose_workshop' %}" class="dash-action">
+                        <div class="dash-action__icon" style="background: var(--accent);">
+                            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        </div>
+                        <div>
+                            <div class="dash-action__title">Propose Workshop</div>
+                            <div class="dash-action__desc">Submit a new workshop proposal</div>
+                        </div>
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'workshop_app:workshop_type_list' %}" class="dash-action">
+                        <div class="dash-action__icon" style="background: var(--tertiary);">
+                            <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                        </div>
+                        <div>
+                            <div class="dash-action__title">Browse Workshop Types</div>
+                            <div class="dash-action__desc">Explore available workshops</div>
+                        </div>
+                    </a>
+                    <a href="{% url 'statistics_app:public' %}" class="dash-action">
+                        <div class="dash-action__icon" style="background: var(--quaternary);">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/></svg>
+                        </div>
+                        <div>
+                            <div class="dash-action__title">View Statistics</div>
+                            <div class="dash-action__desc">Workshop data across India</div>
+                        </div>
+                    </a>
+                    <a href="{% url 'workshop_app:view_own_profile' %}" class="dash-action">
+                        <div class="dash-action__icon" style="background: var(--secondary);">
+                            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        </div>
+                        <div>
+                            <div class="dash-action__title">My Profile</div>
+                            <div class="dash-action__desc">View and edit your details</div>
+                        </div>
+                    </a>
+                    <a href="{% url 'password_change' %}" class="dash-action">
+                        <div class="dash-action__icon" style="background: var(--fg);">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        </div>
+                        <div>
+                            <div class="dash-action__title">Change Password</div>
+                            <div class="dash-action__desc">Update your security settings</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Workshop Types -->
+            {% if workshop_types %}
+            <div class="dash-card">
+                <div class="dash-card__header">
+                    <h2>
+                        <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                        Available Workshops
+                    </h2>
+                </div>
+                <div class="dash-types">
+                    {% for wtype in workshop_types %}
+                    <a href="{% url 'workshop_app:workshop_type_details' wtype.id %}" class="dash-type-chip">
+                        {{ wtype.name }}
+                        <span class="dash-type-chip__dur">{{ wtype.duration }}d</span>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+</div>
+
+<!-- Page transition overlay -->
+<div class="page-transition" id="page-transition">
+    <span class="page-transition__dot"></span>
+    <span class="page-transition__text"></span>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SCRIPTS
+     ═══════════════════════════════════════════ -->
+<script>
+(function() {
+    // Page reveal animation
+    var overlay = document.getElementById('page-transition');
+    var textEl = overlay.querySelector('.page-transition__text');
+
+    var transName = sessionStorage.getItem('pageTransitionName');
+    if (transName) {
+        sessionStorage.removeItem('pageTransitionName');
+        textEl.textContent = transName;
+
+        setTimeout(function() {
+            document.documentElement.classList.remove('page-transitioning');
+            overlay.classList.add('page-transition--exit');
+        }, 500);
+
+        setTimeout(function() {
+            overlay.classList.remove('page-transition--exit');
+        }, 1200);
+    } else {
+        textEl.textContent = 'Dashboard';
+        document.documentElement.classList.add('page-transitioning');
+
+        setTimeout(function() {
+            document.documentElement.classList.remove('page-transitioning');
+            overlay.classList.add('page-transition--exit');
+        }, 350);
+
+        setTimeout(function() {
+            overlay.classList.remove('page-transition--exit');
+        }, 1000);
+    }
+
+    // Mobile nav toggle
+    var toggle = document.getElementById('nav-toggle');
+    var links = document.getElementById('nav-links');
+    toggle.addEventListener('click', function() { links.classList.toggle('open'); });
+})();
+</script>
+
+</body>
+</html>

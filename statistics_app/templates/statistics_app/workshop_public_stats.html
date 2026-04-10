@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{% static 'workshop_app/css/landing.css' %}">
     <link rel="stylesheet" href="{% static 'workshop_app/css/statistics.css' %}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <script>if(sessionStorage.getItem('pageTransitionName')){document.documentElement.classList.add('page-transitioning');}</script>
 </head>
 <body>
 
@@ -445,6 +446,38 @@ overlay.addEventListener('click', function(e) {
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') overlay.classList.remove('open');
 });
+</script>
+
+<!-- Page transition overlay -->
+<div class="page-transition" id="page-transition">
+    <span class="page-transition__dot"></span>
+    <span class="page-transition__text"></span>
+</div>
+
+<script>
+(function() {
+    var overlay = document.getElementById('page-transition');
+    var textEl = overlay.querySelector('.page-transition__text');
+
+    var transName = sessionStorage.getItem('pageTransitionName');
+    if (transName) {
+        sessionStorage.removeItem('pageTransitionName');
+        textEl.textContent = transName;
+        setTimeout(function() {
+            document.documentElement.classList.remove('page-transitioning');
+            overlay.classList.add('page-transition--exit');
+        }, 500);
+        setTimeout(function() { overlay.classList.remove('page-transition--exit'); }, 1200);
+    } else {
+        textEl.textContent = 'Statistics';
+        document.documentElement.classList.add('page-transitioning');
+        setTimeout(function() {
+            document.documentElement.classList.remove('page-transitioning');
+            overlay.classList.add('page-transition--exit');
+        }, 350);
+        setTimeout(function() { overlay.classList.remove('page-transition--exit'); }, 1000);
+    }
+})();
 </script>
 
 </body>

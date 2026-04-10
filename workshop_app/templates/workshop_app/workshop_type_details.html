@@ -1,32 +1,141 @@
-{% extends 'workshop_app/base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="{% static 'workshop_app/img/favicon.svg' %}">
+    <title>{{ workshop_type.name }} — FOSSEE Workshops</title>
+    <meta name="description" content="Details for {{ workshop_type.name }} workshop.">
 
-{% block title %}
-    View Workshop details
-{% endblock %}
+    <link rel="stylesheet" href="{% static 'workshop_app/css/design-tokens.css' %}">
+    <link rel="stylesheet" href="{% static 'workshop_app/css/playful-geometric.css' %}">
+    <link rel="stylesheet" href="{% static 'workshop_app/css/landing.css' %}">
+    <link rel="stylesheet" href="{% static 'workshop_app/css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'workshop_app/css/propose.css' %}">
 
-{% block content %}
-    <div class="container">
-        <h2 class="text-center m-3">Workshop Details</h2>
-        <table class="table table-hover">
-            <tr class="d-flex">
-                <th class="col-3">Workshop Name :</th>
-                <td class="col">{{ workshop_type.name }}</td>
-            </tr>
-            <tr class="d-flex">
-                <th class="col-3">Duration :</th>
-                <td class="col">{{ workshop_type.duration }} day(s)</td>
-            </tr>
-            <tr class="d-flex">
-                <th class="col-3">Description :</th>
-                <td class="col">{{ workshop_type.description }}</td>
-            </tr>
-            <tr class="d-flex">
-                <th class="col-3">Terms and Conditions :</th>
-                <td class="col">{{ workshop_type.terms_and_conditions }}</td>
-            </tr>
-        </table>
+    <script>if(sessionStorage.getItem('pageTransitionName')){document.documentElement.classList.add('page-transitioning');}</script>
+</head>
+<body>
+
+<div class="dash-page">
+
+<!-- Navbar -->
+<nav class="pg-nav" id="main-nav" style="background: rgba(255,253,245,0.95);">
+    <div class="pg-container">
+        <div class="pg-nav__inner">
+            <a href="/" class="pg-nav__logo">
+                <span class="pg-nav__logo-dot"></span>
+                FOSSEE Workshops
+            </a>
+            <ul class="pg-nav__links" id="nav-links">
+                <li><a href="/" class="pg-nav__link">Home</a></li>
+                <li><a href="{% url 'statistics_app:public' %}" class="pg-nav__link">Statistics</a></li>
+                <li><a href="{% url 'workshop_app:workshop_type_list' %}" class="pg-nav__link">Workshop Types</a></li>
+                {% if request.user.is_authenticated %}
+                <li class="pg-nav__cta">
+                    <a href="{% url 'workshop_app:dashboard' %}" class="btn-outline" style="padding: 6px 16px; min-height: 38px; font-size: 0.85rem;">Dashboard</a>
+                    <a href="{% url 'workshop_app:logout' %}" class="btn-candy" style="padding: 6px 16px; min-height: 38px; font-size: 0.85rem;">Sign Out</a>
+                </li>
+                {% endif %}
+            </ul>
+            <button class="pg-nav__hamburger" id="nav-toggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
     </div>
+</nav>
 
-{% endblock %}
+<!-- Hero -->
+<section class="dash-hero" style="padding-bottom: var(--space-10);">
+    <div class="dash-hero__shape dash-hero__shape--1"></div>
+    <div class="dash-hero__shape dash-hero__shape--2"></div>
+    <div class="dash-hero__shape dash-hero__shape--3"></div>
 
+    <div class="pg-container">
+        <div class="dash-hero__content" style="margin-bottom: 0;">
+            <a href="{% url 'workshop_app:workshop_type_list' %}" class="propose-back">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                All Workshop Types
+            </a>
+            <span class="pg-badge pg-badge--violet" style="margin-top: var(--space-4);">Workshop Details</span>
+            <h1>{{ workshop_type.name }}</h1>
+            <p style="display: flex; align-items: center; gap: var(--space-2);">
+                <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:rgba(255,255,255,0.5);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;fill:none;">
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                </svg>
+                {{ workshop_type.duration }} day{{ workshop_type.duration|pluralize }} duration
+            </p>
+        </div>
+    </div>
+</section>
 
+<!-- Content -->
+<div class="dash-body">
+    <div class="pg-container" style="max-width: 800px;">
+
+        <!-- Description -->
+        <div class="dash-card" style="margin-bottom: var(--space-6);">
+            <div class="dash-card__header">
+                <h2>
+                    <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    Description
+                </h2>
+            </div>
+            <p style="font-size: var(--text-md); line-height: 1.8; color: var(--fg);">{{ workshop_type.description }}</p>
+        </div>
+
+        <!-- Terms & Conditions -->
+        <div class="dash-card">
+            <div class="dash-card__header">
+                <h2>
+                    <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    Terms & Conditions
+                </h2>
+            </div>
+            <p style="font-size: var(--text-sm); line-height: 1.8; color: var(--muted-fg);">{{ workshop_type.terms_and_conditions }}</p>
+        </div>
+
+    </div>
+</div>
+
+</div>
+
+<!-- Page transition -->
+<div class="page-transition" id="page-transition">
+    <span class="page-transition__dot"></span>
+    <span class="page-transition__text"></span>
+</div>
+
+<script>
+(function() {
+    var overlay = document.getElementById('page-transition');
+    var textEl = overlay.querySelector('.page-transition__text');
+
+    var transName = sessionStorage.getItem('pageTransitionName');
+    if (transName) {
+        sessionStorage.removeItem('pageTransitionName');
+        textEl.textContent = transName;
+        setTimeout(function() {
+            document.documentElement.classList.remove('page-transitioning');
+            overlay.classList.add('page-transition--exit');
+        }, 500);
+        setTimeout(function() { overlay.classList.remove('page-transition--exit'); }, 1200);
+    } else {
+        textEl.textContent = '{{ workshop_type.name }}';
+        document.documentElement.classList.add('page-transitioning');
+        setTimeout(function() {
+            document.documentElement.classList.remove('page-transitioning');
+            overlay.classList.add('page-transition--exit');
+        }, 350);
+        setTimeout(function() { overlay.classList.remove('page-transition--exit'); }, 1000);
+    }
+
+    document.getElementById('nav-toggle').addEventListener('click', function() {
+        document.getElementById('nav-links').classList.toggle('open');
+    });
+})();
+</script>
+
+</body>
+</html>

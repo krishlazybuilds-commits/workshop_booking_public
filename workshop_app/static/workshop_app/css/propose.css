@@ -1,0 +1,425 @@
+/* =============================================================
+   PROPOSE WORKSHOP — Playful Geometric Design
+   ============================================================= */
+
+/* ── Layout ──────────────────────────────────── */
+.propose-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+/* ── Back link ───────────────────────────────── */
+.propose-back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-heading);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  transition: color var(--duration-fast);
+}
+.propose-back:hover { color: white; }
+.propose-back svg {
+  width: 16px; height: 16px;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+/* ── Info banner ─────────────────────────────── */
+.propose-info {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  background: rgba(139, 92, 246, 0.06);
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-6);
+}
+
+.propose-info svg {
+  width: 20px; height: 20px;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.propose-info p {
+  font-size: var(--text-sm);
+  color: var(--muted-fg);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.propose-info a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+.propose-info a:hover { text-decoration: underline; }
+
+/* ── Form fields ─────────────────────────────── */
+.propose-field {
+  margin-bottom: var(--space-5);
+}
+
+.propose-field label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--fg);
+  margin-bottom: var(--space-2);
+}
+
+.propose-field label svg {
+  width: 16px; height: 16px;
+  stroke: var(--accent);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.propose-field .pg-input {
+  width: 100%;
+}
+
+/* Override jQuery UI datepicker input */
+.propose-field .datepicker {
+  cursor: pointer;
+}
+
+/* ── Errors ──────────────────────────────────── */
+.propose-errors {
+  background: rgba(244, 114, 182, 0.08);
+  border: 1px solid rgba(244, 114, 182, 0.2);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  margin-bottom: var(--space-6);
+}
+
+.propose-errors__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--secondary);
+  margin-bottom: var(--space-2);
+}
+
+.propose-errors__header svg {
+  width: 18px; height: 18px;
+  stroke: var(--secondary);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.propose-errors ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.propose-errors li {
+  font-size: var(--text-sm);
+  color: var(--secondary);
+  padding: var(--space-1) 0;
+}
+
+/* ── Checkbox (T&C) ──────────────────────────── */
+.propose-tnc {
+  margin: var(--space-6) 0;
+  padding: var(--space-4) var(--space-5);
+  background: var(--muted);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}
+
+.propose-checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  font-size: var(--text-sm);
+  color: var(--fg);
+}
+
+.propose-checkbox input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.propose-checkbox__check {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--duration-fast);
+  background: var(--card-bg);
+}
+
+.propose-checkbox__check svg {
+  width: 14px; height: 14px;
+  stroke: white;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  opacity: 0;
+  transform: scale(0);
+  transition: all var(--duration-fast);
+}
+
+.propose-checkbox input:checked + .propose-checkbox__check {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.propose-checkbox input:checked + .propose-checkbox__check svg {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.propose-tnc__link {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+.propose-tnc__link:hover { text-decoration: underline; }
+
+/* ── Submit ──────────────────────────────────── */
+.propose-submit {
+  width: 100%;
+  justify-content: center;
+}
+
+/* ── Tips sidebar ────────────────────────────── */
+.propose-tips__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.propose-tip {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+
+.propose-tip__num {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: var(--text-xs);
+  font-weight: 800;
+  color: white;
+  flex-shrink: 0;
+}
+
+.propose-tip strong {
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--fg);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.propose-tip p {
+  font-size: var(--text-xs);
+  color: var(--muted-fg);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ── T&C Modal ───────────────────────────────── */
+.propose-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-base);
+}
+
+.propose-modal-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.propose-modal {
+  background: var(--card-bg);
+  border: var(--border-w) solid var(--fg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  width: min(560px, 90vw);
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(20px) scale(0.97);
+  transition: transform var(--duration-base) var(--ease-smooth);
+}
+
+.propose-modal-overlay.active .propose-modal {
+  transform: translateY(0) scale(1);
+}
+
+.propose-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-5) var(--space-6);
+  border-bottom: 2px dashed var(--border);
+}
+
+.propose-modal__header h3 {
+  font-size: var(--text-lg);
+  margin: 0;
+}
+
+.propose-modal__close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  transition: background var(--duration-fast);
+}
+.propose-modal__close:hover { background: var(--muted); }
+
+.propose-modal__close svg {
+  width: 20px; height: 20px;
+  stroke: var(--muted-fg);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.propose-modal__body {
+  padding: var(--space-6);
+  overflow-y: auto;
+  flex: 1;
+  font-size: var(--text-sm);
+  line-height: 1.7;
+  color: var(--fg);
+}
+
+.propose-modal__footer {
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid var(--border);
+}
+
+/* ── jQuery UI overrides ─────────────────────── */
+.ui-datepicker {
+  font-family: var(--font-body) !important;
+  border-radius: var(--radius-lg) !important;
+  border: var(--border-w) solid var(--fg) !important;
+  box-shadow: var(--shadow-card) !important;
+  padding: var(--space-3) !important;
+  background: var(--card-bg) !important;
+  z-index: 100 !important;
+}
+
+.ui-datepicker-header {
+  background: var(--fg) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: var(--radius-md) !important;
+  padding: var(--space-2) var(--space-3) !important;
+  font-family: var(--font-heading) !important;
+}
+
+.ui-datepicker-header .ui-datepicker-prev,
+.ui-datepicker-header .ui-datepicker-next {
+  cursor: pointer !important;
+  top: 6px !important;
+}
+
+.ui-datepicker th {
+  font-family: var(--font-heading) !important;
+  font-weight: 700 !important;
+  font-size: var(--text-xs) !important;
+  color: var(--muted-fg) !important;
+  padding: var(--space-2) !important;
+}
+
+.ui-datepicker td {
+  padding: 2px !important;
+}
+
+.ui-datepicker td a,
+.ui-datepicker td span {
+  text-align: center !important;
+  border-radius: var(--radius-md) !important;
+  padding: var(--space-2) !important;
+  font-size: var(--text-sm) !important;
+  transition: all var(--duration-fast) !important;
+}
+
+.ui-datepicker td a:hover {
+  background: rgba(139, 92, 246, 0.1) !important;
+  color: var(--accent) !important;
+}
+
+.ui-datepicker .ui-datepicker-today a {
+  background: rgba(139, 92, 246, 0.12) !important;
+  color: var(--accent) !important;
+  font-weight: 700 !important;
+}
+
+.ui-datepicker .ui-state-active {
+  background: var(--accent) !important;
+  color: white !important;
+  border: none !important;
+}
+
+.ui-datepicker select {
+  font-family: var(--font-heading) !important;
+  padding: 2px 4px !important;
+  border-radius: var(--radius-sm) !important;
+  border: 1px solid rgba(255,255,255,0.3) !important;
+  background: rgba(255,255,255,0.15) !important;
+  color: white !important;
+  font-size: var(--text-xs) !important;
+}
+
+/* ── Responsive ──────────────────────────────── */
+@media (max-width: 768px) {
+  .propose-layout {
+    grid-template-columns: 1fr;
+  }
+}

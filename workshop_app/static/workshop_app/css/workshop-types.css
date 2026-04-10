@@ -1,0 +1,222 @@
+/* =============================================================
+   WORKSHOP TYPES — Playful Geometric Design
+   ============================================================= */
+
+/* ── Card Grid ───────────────────────────────── */
+.wt-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-5);
+}
+
+/* ── Card ────────────────────────────────────── */
+.wt-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-6);
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--duration-base) var(--ease-smooth);
+  animation: slide-up 0.4s var(--ease-smooth) both;
+}
+
+.wt-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+  border-color: var(--accent);
+}
+
+/* Accent bar on top */
+.wt-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--tertiary));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-base) var(--ease-smooth);
+}
+
+.wt-card:hover::before {
+  transform: scaleX(1);
+}
+
+/* Number badge */
+.wt-card__num {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 800;
+  color: var(--muted-fg);
+  flex-shrink: 0;
+  margin-bottom: var(--space-4);
+  transition: all var(--duration-fast);
+}
+
+.wt-card:hover .wt-card__num {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+/* Body */
+.wt-card__body {
+  flex: 1;
+  margin-bottom: var(--space-4);
+}
+
+.wt-card__title {
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-2);
+  color: var(--fg);
+  transition: color var(--duration-fast);
+}
+
+.wt-card:hover .wt-card__title {
+  color: var(--accent);
+}
+
+.wt-card__desc {
+  font-size: var(--text-sm);
+  color: var(--muted-fg);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Footer */
+.wt-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-4);
+  border-top: 1px dashed var(--border);
+}
+
+.wt-card__duration {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-heading);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--muted-fg);
+}
+
+.wt-card__duration svg {
+  width: 14px; height: 14px;
+  stroke: var(--tertiary);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.wt-card__arrow {
+  width: 28px; height: 28px;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--duration-fast);
+}
+
+.wt-card__arrow svg {
+  width: 14px; height: 14px;
+  stroke: var(--muted-fg);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  transition: stroke var(--duration-fast);
+}
+
+.wt-card:hover .wt-card__arrow {
+  background: var(--accent);
+}
+.wt-card:hover .wt-card__arrow svg {
+  stroke: white;
+}
+
+/* ── Pagination ──────────────────────────────── */
+.wt-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-top: var(--space-10);
+}
+
+.wt-page-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--fg);
+  text-decoration: none;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--card-bg);
+  transition: all var(--duration-fast);
+}
+
+.wt-page-btn:hover {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.wt-page-btn:hover svg { stroke: white; }
+
+.wt-page-btn svg {
+  width: 14px; height: 14px;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.wt-page-btn--disabled {
+  color: var(--muted-fg);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.wt-page-info {
+  font-family: var(--font-heading);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--muted-fg);
+}
+
+/* ── Responsive ──────────────────────────────── */
+@media (max-width: 1024px) {
+  .wt-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .wt-grid {
+    grid-template-columns: 1fr;
+  }
+}

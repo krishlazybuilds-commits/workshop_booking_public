@@ -1,121 +1,321 @@
-{% extends "workshop_app/base.html" %}
 {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="{% static 'workshop_app/img/favicon.svg' %}">
+    <title>Propose Workshop — FOSSEE Workshops</title>
+    <meta name="description" content="Propose a new FOSSEE workshop at your institute.">
 
-{% block title %}
-    Propose a workshop
-{% endblock %}
+    <link rel="stylesheet" href="{% static 'workshop_app/css/design-tokens.css' %}">
+    <link rel="stylesheet" href="{% static 'workshop_app/css/playful-geometric.css' %}">
+    <link rel="stylesheet" href="{% static 'workshop_app/css/landing.css' %}">
+    <link rel="stylesheet" href="{% static 'workshop_app/css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'workshop_app/css/propose.css' %}">
 
-{% block extra-dependencies %}
+    <!-- jQuery + jQuery UI for datepicker -->
     <link rel="stylesheet" href="{% static 'workshop_app/css/jquery-ui.css' %}" type="text/css"/>
-    <script src="{% static 'workshop_app/js/jquery-1.12.4.js' %}"></script>
-    <script src="{% static 'workshop_app/js/jquery-ui.min.js' %}"></script>
-{% endblock %}
 
-{% block extra-custom-scripts %}
-    <script>
-        var dateToday = new Date();
-        var upto = new Date();
+    <script>if(sessionStorage.getItem('pageTransitionName')){document.documentElement.classList.add('page-transitioning');}</script>
+</head>
+<body>
 
-        dateToday.setDate(dateToday.getDate() + 3);
-        upto.setFullYear(dateToday.getFullYear() + 1);
+<div class="dash-page">
 
-        $(function () {
-            $(".datepicker").datepicker({
-                changeMonth: true,
-                changeYear: true,
-                minDate: dateToday,
-                maxDate: upto,
-                beforeShowDay: $.datepicker.noWeekends,
-            });
-
-
-            $('#disp_tnc').click(function (e) {
-                e.preventDefault()
-                if ($('#id_workshop_type').val() === '')
-                    $('.modal-body').html("<p class='text-danger'>Please select a workshop type</p>")
-                else {
-                    $.ajax({
-                        url: '/workshop/type_tnc/' + $('#id_workshop_type').val(),
-                        success: function (data) {
-                            $('.modal-body').html(data.tnc)
-                        }
-                    })
-                }
-            })
-        });
-    </script>
-{% endblock %}
-
-
-{% block content %}
-    <style type="text/css">
-        .errorlist {
-            color: red;
-        }
-
-    .modal-open .modal{
-        overflow-y: hidden;
-    }
-    </style>
-
-    <div class="container" align="center">
-        <div class="alert alert-info">
-            Note: Before proposing the workshop, please check about the workshop in the
-            <strong>Workshop Types</strong> section
+<!-- ═══════════════════════════════════════════
+     NAVBAR
+     ═══════════════════════════════════════════ -->
+<nav class="pg-nav" id="main-nav" style="background: rgba(255,253,245,0.95);">
+    <div class="pg-container">
+        <div class="pg-nav__inner">
+            <a href="{% url 'workshop_app:dashboard' %}" class="pg-nav__logo">
+                <span class="pg-nav__logo-dot"></span>
+                FOSSEE Workshops
+            </a>
+            <ul class="pg-nav__links" id="nav-links">
+                <li><a href="/" class="pg-nav__link">Home</a></li>
+                <li><a href="{% url 'statistics_app:public' %}" class="pg-nav__link">Statistics</a></li>
+                <li><a href="{% url 'workshop_app:propose_workshop' %}" class="pg-nav__link pg-nav__link--active">Propose Workshop</a></li>
+                <li><a href="{% url 'workshop_app:workshop_type_list' %}" class="pg-nav__link">Workshop Types</a></li>
+                <li class="pg-nav__cta">
+                    <a href="{% url 'workshop_app:view_own_profile' %}" class="btn-outline" style="padding: 6px 16px; min-height: 38px; font-size: 0.85rem;">
+                        {{ user.first_name }}
+                    </a>
+                    <a href="{% url 'workshop_app:logout' %}" class="btn-candy" style="padding: 6px 16px; min-height: 38px; font-size: 0.85rem;">
+                        Sign Out
+                    </a>
+                </li>
+            </ul>
+            <button class="pg-nav__hamburger" id="nav-toggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
         </div>
-        <br><br>
-        <div class="col-md-6 col-md-offset-6">
-            <div class="card border-primary">
-                <div class="card-header">
-                    <h3>Propose Workshop</h3>
+    </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════ -->
+<section class="dash-hero" style="padding-bottom: var(--space-10);">
+    <div class="dash-hero__shape dash-hero__shape--1"></div>
+    <div class="dash-hero__shape dash-hero__shape--2"></div>
+    <div class="dash-hero__shape dash-hero__shape--3"></div>
+
+    <div class="pg-container">
+        <div class="dash-hero__content">
+            <a href="{% url 'workshop_app:dashboard' %}" class="propose-back">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Dashboard
+            </a>
+            <span class="pg-badge pg-badge--mint" style="margin-top: var(--space-4);">New Proposal</span>
+            <h1>Propose a <span style="color: var(--accent);">Workshop</span></h1>
+            <p>Select a workshop type and preferred date for your institute.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     FORM SECTION
+     ═══════════════════════════════════════════ -->
+<div class="dash-body">
+    <div class="pg-container">
+        <div class="propose-layout">
+
+            <!-- Main form card -->
+            <div class="dash-card propose-card">
+                <div class="dash-card__header">
+                    <h2>
+                        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Workshop Details
+                    </h2>
                 </div>
-                <div class="card-body">
-                    <div class="form-group">
-                        <form method="post">
-                            {% csrf_token %}
-                            <br/>
-                            {{ form.workshop_type }}
-                            <br>
-                            {{ form.date }}
-                            <br>
-                            {{ form.tnc_accepted }} I accept the
-                            <a href="#" id="disp_tnc" data-toggle="modal"
-                            data-target="#exampleModalCenter">
-                                terms and conditions
-                            </a>
-                            <br>
-                            {% if form.errors %}
-                                <br>
-                                <div style="text-align: left; border: 1px solid red; padding-top: 5px">
-                                    <h5 style="text-align: center; color: red; font-weight: bolder">Errors</h5>
-                                    {{ form.errors }}
-                                </div>
-                            {% endif %}
-                            <br>
-                            <button class="btn btn-success" type="submit">Submit</button>
-                        </form>
+
+                <!-- Info banner -->
+                <div class="propose-info">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    <p>Before proposing, please check the <a href="{% url 'workshop_app:workshop_type_list' %}">Workshop Types</a> section for details about available workshops.</p>
+                </div>
+
+                <form method="post" id="propose-form">
+                    {% csrf_token %}
+
+                    <!-- Error messages -->
+                    {% if form.errors %}
+                    <div class="propose-errors">
+                        <div class="propose-errors__header">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            Please fix the following:
+                        </div>
+                        {{ form.errors }}
+                    </div>
+                    {% endif %}
+
+                    <!-- Workshop Type -->
+                    <div class="propose-field">
+                        <label for="id_workshop_type">
+                            <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                            Workshop Type
+                        </label>
+                        {{ form.workshop_type }}
+                    </div>
+
+                    <!-- Date -->
+                    <div class="propose-field">
+                        <label for="id_date">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            Preferred Date
+                        </label>
+                        {{ form.date }}
+                    </div>
+
+                    <!-- Terms & Conditions -->
+                    <div class="propose-tnc">
+                        <label class="propose-checkbox">
+                            {{ form.tnc_accepted }}
+                            <span class="propose-checkbox__check">
+                                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                            <span>I accept the <a href="#" id="disp_tnc" class="propose-tnc__link">terms and conditions</a></span>
+                        </label>
+                    </div>
+
+                    <!-- Submit -->
+                    <button type="submit" class="btn-candy propose-submit">
+                        Submit Proposal
+                        <span class="btn-arrow">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Tips sidebar -->
+            <div class="dash-card propose-tips">
+                <div class="dash-card__header">
+                    <h2>
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        Quick Tips
+                    </h2>
+                </div>
+                <div class="propose-tips__list">
+                    <div class="propose-tip">
+                        <div class="propose-tip__num" style="background: var(--accent);">1</div>
+                        <div>
+                            <strong>Choose wisely</strong>
+                            <p>Select a workshop type that matches your institute's curriculum needs.</p>
+                        </div>
+                    </div>
+                    <div class="propose-tip">
+                        <div class="propose-tip__num" style="background: var(--tertiary);">2</div>
+                        <div>
+                            <strong>Plan ahead</strong>
+                            <p>Pick a date at least 3 days from now. Only weekdays are allowed.</p>
+                        </div>
+                    </div>
+                    <div class="propose-tip">
+                        <div class="propose-tip__num" style="background: var(--quaternary);">3</div>
+                        <div>
+                            <strong>Review T&C</strong>
+                            <p>Read the terms and conditions specific to your chosen workshop type.</p>
+                        </div>
+                    </div>
+                    <div class="propose-tip">
+                        <div class="propose-tip__num" style="background: var(--secondary);">4</div>
+                        <div>
+                            <strong>Stay updated</strong>
+                            <p>You'll get an email once an instructor accepts your proposal.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <br>
-
     </div>
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
-         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Terms and Conditions</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
+</div>
 
-                </div>
-            </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     T&C MODAL
+     ═══════════════════════════════════════════ -->
+<div class="propose-modal-overlay" id="tnc-modal">
+    <div class="propose-modal">
+        <div class="propose-modal__header">
+            <h3>Terms & Conditions</h3>
+            <button class="propose-modal__close" id="tnc-close" aria-label="Close">
+                <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="propose-modal__body" id="tnc-body">
+            <p style="color: var(--muted-fg);">Select a workshop type first to view its terms.</p>
+        </div>
+        <div class="propose-modal__footer">
+            <button class="btn-candy" id="tnc-accept" style="width: 100%; justify-content: center;">
+                I Understand
+            </button>
         </div>
     </div>
-{% endblock %}
+</div>
+
+<!-- Page transition overlay -->
+<div class="page-transition" id="page-transition">
+    <span class="page-transition__dot"></span>
+    <span class="page-transition__text"></span>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SCRIPTS
+     ═══════════════════════════════════════════ -->
+<script src="{% static 'workshop_app/js/jquery-1.12.4.js' %}"></script>
+<script src="{% static 'workshop_app/js/jquery-ui.min.js' %}"></script>
+
+<script>
+(function() {
+    // Page reveal
+    var overlay = document.getElementById('page-transition');
+    var textEl = overlay.querySelector('.page-transition__text');
+
+    var transName = sessionStorage.getItem('pageTransitionName');
+    if (transName) {
+        sessionStorage.removeItem('pageTransitionName');
+        textEl.textContent = transName;
+        setTimeout(function() {
+            document.documentElement.classList.remove('page-transitioning');
+            overlay.classList.add('page-transition--exit');
+        }, 500);
+        setTimeout(function() { overlay.classList.remove('page-transition--exit'); }, 1200);
+    } else {
+        textEl.textContent = 'Propose Workshop';
+        document.documentElement.classList.add('page-transitioning');
+        setTimeout(function() {
+            document.documentElement.classList.remove('page-transitioning');
+            overlay.classList.add('page-transition--exit');
+        }, 350);
+        setTimeout(function() { overlay.classList.remove('page-transition--exit'); }, 1000);
+    }
+
+    // Mobile nav
+    document.getElementById('nav-toggle').addEventListener('click', function() {
+        document.getElementById('nav-links').classList.toggle('open');
+    });
+})();
+</script>
+
+<!-- Datepicker + T&C modal -->
+<script>
+$(function() {
+    var dateToday = new Date();
+    var upto = new Date();
+    dateToday.setDate(dateToday.getDate() + 3);
+    upto.setFullYear(dateToday.getFullYear() + 1);
+
+    $(".datepicker").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        minDate: dateToday,
+        maxDate: upto,
+        beforeShowDay: $.datepicker.noWeekends,
+        dateFormat: 'yy-mm-dd'
+    });
+
+    // T&C modal
+    var modal = document.getElementById('tnc-modal');
+    var body = document.getElementById('tnc-body');
+    var closeBtn = document.getElementById('tnc-close');
+    var acceptBtn = document.getElementById('tnc-accept');
+
+    document.getElementById('disp_tnc').addEventListener('click', function(e) {
+        e.preventDefault();
+        var val = document.getElementById('id_workshop_type').value;
+        if (!val) {
+            body.innerHTML = '<p style="color: var(--secondary); font-weight: 600;">Please select a workshop type first.</p>';
+        } else {
+            $.ajax({
+                url: '/workshop/type_tnc/' + val,
+                success: function(data) {
+                    body.innerHTML = data.tnc;
+                }
+            });
+        }
+        modal.classList.add('active');
+    });
+
+    function closeModal() { modal.classList.remove('active'); }
+    closeBtn.addEventListener('click', closeModal);
+    acceptBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) closeModal();
+    });
+});
+</script>
+
+<!-- Style Django form widgets -->
+<script>
+document.querySelectorAll('.propose-field select, .propose-field input').forEach(function(el) {
+    el.classList.remove('form-control');
+    el.classList.add('pg-input');
+});
+</script>
+
+</body>
+</html>

@@ -48,10 +48,8 @@ def is_instructor(user):
 
 
 def get_landing_page(user):
-    # For now, landing pages of both instructor and coordinator are same
-    if is_instructor(user):
-        return reverse('workshop_app:workshop_status_instructor')
-    return reverse('workshop_app:workshop_status_coordinator')
+    # Route all users to the modern dashboard
+    return reverse('workshop_app:dashboard')
 
 
 # View functions
@@ -517,3 +515,47 @@ def terms_of_service(request):
 def contact_page(request):
     """Contact page"""
     return render(request, 'workshop_app/contact.html', {'current_page': 'contact'})
+
+
+# Dashboard
+
+@login_required
+def dashboard(request):
+    """Modern dashboard page for authenticated users"""
+    user = request.user
+    today = timezone.now().date()
+
+    # Get user's workshops
+    if is_instructor(user):
+        workshops = Workshop.objects.filter(
+            instructor=user.id
+        ).order_by('-date')
+    else:
+        workshops = Workshop.objects.filter(
+            coordinator=user.id
+        ).order_by('-date')
+
+    # Stats
+    total_workshops = workshops.count()
+    pending_workshops = workshops.filter(status=0).count()
+    accepted_workshops = workshops.filter(status=1).count()
+    upcoming_workshops = workshops.filter(date__gte=today, status=1).count()
+
+    # Recent workshops (last 10)
+    recent_workshops = workshops[:10]
+
+    # All workshop types for reference
+    workshop_types = WorkshopType.objects.all()
+
+    context = {
+        'workshops': recent_workshops,
+        'total_workshops': total_workshops,
+        'pending_workshops': pending_workshops,
+        'accepted_workshops': accepted_workshops,
+        'upcoming_workshops': upcoming_workshops,
+        'workshop_types': workshop_types,
+        'is_instructor': is_instructor(user),
+        'today': today,
+    }
+    return render(request, 'workshop_app/dashboard.html', context)
+

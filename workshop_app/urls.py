@@ -54,4 +54,5 @@ urlpatterns = [
     url(r'^privacy/$', views.privacy_policy, name='privacy'),
     url(r'^terms/$', views.terms_of_service, name='terms'),
     url(r'^contact/$', views.contact_page, name='contact'),
+    url(r'^home/$', views.dashboard, name='dashboard'),
 ]
