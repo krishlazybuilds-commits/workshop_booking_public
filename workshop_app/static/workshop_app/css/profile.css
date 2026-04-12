@@ -134,6 +134,22 @@
   margin-bottom: var(--space-5);
 }
 
+/* Title field — give the pill-selector & search bar breathing room */
+.profile-field--title {
+  margin-bottom: var(--space-8);
+}
+
+.profile-field--title .pg-dropdown__typeahead,
+.profile-field--title .pg-dropdown__search,
+.profile-field--title .pg-dropdown__search-wrap {
+  margin-bottom: var(--space-4);
+}
+
+.profile-field--title .pg-dropdown__options--pills {
+  gap: var(--space-3);
+  padding-top: var(--space-3);
+}
+
 .profile-field label {
   display: flex;
   align-items: center;
