@@ -40,6 +40,10 @@
                 <li><a href="{% url 'workshop_app:workshop_type_list' %}" class="pg-nav__link">Workshop Types</a></li>
                 <li class="pg-nav__cta">
                     <a href="{% url 'workshop_app:view_own_profile' %}" class="btn-outline" style="padding: 6px 16px; min-height: 38px; font-size: 0.85rem;">
+                        <svg viewBox="0 0 24 24" fill="none" style="width:16px;height:16px;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
                         {{ user.first_name }}
                     </a>
                     <a href="{% url 'workshop_app:logout' %}" class="btn-candy" style="padding: 6px 16px; min-height: 38px; font-size: 0.85rem;">
