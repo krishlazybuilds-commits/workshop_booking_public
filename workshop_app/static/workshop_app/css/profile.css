@@ -3,16 +3,6 @@
    Signup-page-inspired card sections + custom dropdowns
    ============================================================= */
 
-/* ── Hide scrollbar on profile page ─────────── */
-.dash-page {
-  overflow-y: auto;
-  scrollbar-width: none;           /* Firefox */
-  -ms-overflow-style: none;        /* IE / Edge */
-}
-.dash-page::-webkit-scrollbar {
-  display: none;                   /* Chrome / Safari */
-}
-
 /* ── Layout ──────────────────────────────────── */
 .profile-layout {
   display: grid;
