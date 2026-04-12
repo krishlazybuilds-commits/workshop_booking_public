@@ -102,6 +102,16 @@
   }
 }
 
+/* Active state on buttons — highlight border instead of dot */
+.btn-outline.pg-nav__link--active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(139, 92, 246, 0.06);
+}
+.btn-outline.pg-nav__link--active::after {
+  display: none;
+}
+
 .pg-nav__cta {
   display: flex;
   align-items: center;
