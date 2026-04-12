@@ -31,7 +31,7 @@
                 FOSSEE Workshops
             </a>
             <ul class="pg-nav__links" id="nav-links">
-                <li><a href="/" class="pg-nav__link">Home</a></li>
+                <li><a href="/" class="pg-nav__link pg-nav__link--active">Home</a></li>
                 <li><a href="{% url 'statistics_app:public' %}" class="pg-nav__link">Statistics</a></li>
                 {% if not is_instructor %}
                 <li><a href="{% url 'workshop_app:propose_workshop' %}" class="pg-nav__link">Propose Workshop</a></li>

@@ -68,10 +68,13 @@
   background: var(--muted);
   color: var(--accent);
 }
-.pg-nav__link.active {
+.pg-nav__link.active,
+.pg-nav__link--active {
   color: var(--accent);
+  position: relative;
 }
-.pg-nav__link.active::after {
+.pg-nav__link.active::after,
+.pg-nav__link--active::after {
   content: '';
   position: absolute;
   bottom: -2px;
@@ -81,6 +84,22 @@
   height: 6px;
   border-radius: 50%;
   background: var(--accent);
+  animation: active-dot-pop 0.4s var(--ease-bounce) both;
+}
+
+@keyframes active-dot-pop {
+  0% {
+    transform: translateX(-50%) scale(0);
+    opacity: 0;
+  }
+  60% {
+    transform: translateX(-50%) scale(1.4);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
 }
 
 .pg-nav__cta {
