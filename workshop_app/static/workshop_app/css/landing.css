@@ -516,6 +516,10 @@
   border-top: var(--border-w) dashed var(--border);
 }
 
+.workshop-card__footer .btn-candy--mint {
+  color: white;
+}
+
 /* ── Testimonials / Social Proof ──────────────── */
 .social-proof {
   background: var(--muted);
