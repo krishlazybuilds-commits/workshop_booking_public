@@ -203,6 +203,9 @@
                 {% endif %}
             </div>
 
+            <!-- RIGHT COLUMN: Quick Actions + Available Workshops stacked -->
+            <div class="dash-right-stack">
+
             <!-- Quick Actions -->
             <div class="dash-card">
                 <div class="dash-card__header">
@@ -262,25 +265,31 @@
                 </div>
             </div>
 
-            <!-- Workshop Types -->
+            <!-- Available Workshops -->
             {% if workshop_types %}
-            <div class="dash-card">
+            <div class="dash-card dash-card--workshops">
                 <div class="dash-card__header">
                     <h2>
                         <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
                         Available Workshops
                     </h2>
+                    <a href="{% url 'workshop_app:workshop_type_list' %}" class="dash-card__link">Browse all →</a>
                 </div>
                 <div class="dash-types">
                     {% for wtype in workshop_types %}
-                    <a href="{% url 'workshop_app:workshop_type_details' wtype.id %}" class="dash-type-chip">
-                        {{ wtype.name }}
-                        <span class="dash-type-chip__dur">{{ wtype.duration }}d</span>
+                    <a href="{% url 'workshop_app:workshop_type_details' wtype.id %}" class="dash-type-card">
+                        <div class="dash-type-card__info">
+                            <span class="dash-type-card__name">{{ wtype.name }}</span>
+                            <span class="dash-type-card__dur">{{ wtype.duration }} day{{ wtype.duration|pluralize }}</span>
+                        </div>
+                        <svg class="dash-type-card__arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                     </a>
                     {% endfor %}
                 </div>
             </div>
             {% endif %}
+
+            </div>
         </div>
     </div>
 </div>
