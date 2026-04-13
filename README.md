@@ -2,7 +2,7 @@
 
 > A platform for coordinators to propose, book, and manage free FOSS workshops conducted by IIT Bombay instructors — built with Django and a custom Playful Geometric design system.
 
-![Landing Page] ![screenshot-landing](https://github.com/user-attachments/assets/fef97306-6e5c-40a1-a25a-f4dca176a854)
+![screenshot-landing](https://github.com/user-attachments/assets/fef97306-6e5c-40a1-a25a-f4dca176a854)
 
 
 ---
