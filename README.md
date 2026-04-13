@@ -258,40 +258,40 @@ python manage.py runserver
 
 ### Sign In
 
-![Sign In] ![screenshot-signin](https://github.com/user-attachments/assets/3130a578-900a-42be-9c97-8f051ea461df)
+![screenshot-signin](https://github.com/user-attachments/assets/3130a578-900a-42be-9c97-8f051ea461df)
 
 
 ### Register
 
-![Register] ![screenshot-register](https://github.com/user-attachments/assets/e123e95a-9988-4b0e-8636-bda61eb751e6)
+![screenshot-register](https://github.com/user-attachments/assets/e123e95a-9988-4b0e-8636-bda61eb751e6)
 
 
 ### Dashboard
 
 Once logged in, you land on your coordinator dashboard showing total, accepted, pending, and upcoming workshops at a glance.
 
-![Dashboard] ![screenshot-dashboard](https://github.com/user-attachments/assets/29ee7e37-d4ab-4d3f-af9d-54fa683e764b)
+![screenshot-dashboard](https://github.com/user-attachments/assets/29ee7e37-d4ab-4d3f-af9d-54fa683e764b)
 
 
 ### Propose a Workshop
 
 Select a workshop type and a preferred date. Proposals only take a minute to fill out.
 
-![Propose Workshop] ![screenshot-propose](https://github.com/user-attachments/assets/9b99935b-5689-4c50-9244-cddfe7cf658d)
+![screenshot-propose](https://github.com/user-attachments/assets/9b99935b-5689-4c50-9244-cddfe7cf658d)
 
 
 ### Workshop Types
 
 Browse the available workshop catalog — Python, Scilab, DWSIM, and more — with durations and full descriptions.
 
-![Workshop Types] ![screenshot-workshop-types](https://github.com/user-attachments/assets/35729be0-d69c-4463-9c9b-4af05c8686d7)
+![screenshot-workshop-types](https://github.com/user-attachments/assets/35729be0-d69c-4463-9c9b-4af05c8686d7)
 
 
 ### Statistics
 
 Filter workshops by date range, type, or state. Export results as CSV or view as a chart.
 
-![Statistics] ![screenshot-statistics](https://github.com/user-attachments/assets/490e3504-1492-433c-a318-01835bbe9ba4)
+![screenshot-statistics](https://github.com/user-attachments/assets/490e3504-1492-433c-a318-01835bbe9ba4)
 
 
 ---
